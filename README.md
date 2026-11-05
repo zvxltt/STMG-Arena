@@ -11,11 +11,12 @@ Toute l'app tient dans un seul fichier, `index.html` (HTML, CSS et JavaScript, i
 - **Cours** : SGN, Management, Droit et Économie (définitions, formules, pièges).
 - **Missions** : calculs, QCM, tableaux à compléter, classements, textes à trous, graphiques à analyser et rédactions. 3 missions principales par leçon + 2 bonus.
 - **Correction automatique** dans le navigateur : chiffres, choix et tableaux corrigés exactement ; rédactions notées avec une grille de mots-clés du cours. Le corrigé s'affiche une fois la réponse validée.
-- **XP et rangs** : l'XP se gagne avec les bonnes réponses (premier essai) et en validant une leçon. Animation à chaque gain (passable).
+- **Pré-contrôles** : un vrai sujet type contrôle par leçon (16 au total), avec des documents à lire et analyser (textes, tableaux, graphiques), noté sur 20, avec chrono facultatif. Thèmes : rap, jeux vidéo, Real Madrid, FC Porto, équipe de France.
+- **XP et rangs** : l'XP se gagne avec les bonnes réponses (premier essai) et en validant une leçon. Animation en anneau autour de l'emblème du rang à chaque gain, avec promotion (passable). 9 rangs avec emblèmes dessinés en SVG.
 - **Arène** : historique des missions jouées, avec note et copie corrigée.
 - **Scanner** : photo du cours → lecture du texte sur l'appareil (Tesseract.js, chargé depuis jsDelivr) → la bonne leçon.
 - **Sauvegarde** : la progression est enregistrée automatiquement sur l'appareil. Dans l'onglet Rangs, un code de sauvegarde permet de la transférer sur un autre téléphone ou navigateur.
-- **Mobile** : barre d'onglets en bas, zoom désactivé, champs adaptés au tactile.
+- **Comme une vraie app** : en-tête et barre d'onglets fixes, seul le contenu défile ; zoom désactivé ; champs adaptés au tactile.
 
 ## Modifier l'app
 
