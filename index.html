@@ -450,6 +450,8 @@ footer{display:none}
 .instbtns .btn{flex:1;justify-content:center;min-width:130px}
 .instarrow{position:fixed;left:50%;bottom:calc(6px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);font-size:34px;color:var(--yel);text-shadow:0 0 14px rgba(255,210,63,.7);animation:bob 1s ease-in-out infinite alternate}
 @keyframes bob{to{transform:translate(-50%,8px)}}
+
+.trou input{max-width:100%}
 </style>
 </head>
 <body>
@@ -1198,6 +1200,178 @@ Q("Ce marché est plutôt…",["Un monopole","Un oligopole","En concurrence pure
 cor:"Peu de vendeurs (pas d'atomicité), produits différenciés (pas d'homogénéité), barrières énormes (pas de libre entrée), information partielle : oligopole différencié."}
 ];
 
+// ===== 2 MISSIONS SUPPLÉMENTAIRES PAR LEÇON =====
+const JF=["Juste","Faux"];
+M.sgn1.push(
+{t:'edf',ti:"Ça parle dans le vestiaire des Bleus",xp:50,ctx:"Pendant un stage de l'équipe de France (situations inventées), l'information circule de plusieurs façons.",
+p:[T("Pour chaque message, indique s'il est formel ou informel, et son sens de circulation.",["Message","Formel / informel","Sens"],[["Le sélectionneur envoie le programme du stage par mail officiel",{o:["Formel","Informel"],a:0},{o:["Descendant","Ascendant","Transversal"],a:0}],["Deux kinés discutent d'un joueur à la machine à café",{o:["Formel","Informel"],a:1},{o:["Descendant","Ascendant","Transversal"],a:2}],["Le capitaine remonte au staff, en réunion, la fatigue du groupe",{o:["Formel","Informel"],a:0},{o:["Descendant","Ascendant","Transversal"],a:1}],["L'analyste vidéo partage ses montages avec le préparateur physique sur la plateforme du staff",{o:["Formel","Informel"],a:0},{o:["Descendant","Ascendant","Transversal"],a:2}]]),
+Q("Quel est le risque principal de la communication informelle ?",["Elle est trop lente","Elle peut faire circuler des rumeurs","Elle est interdite par la loi","Elle ne passe que par mail"],1)],
+cor:"Mail officiel = formel, descendant. Machine à café = informel, transversal (même niveau). Le capitaine en réunion = formel, ascendant. Plateforme du staff entre collègues = formel, transversal. L'informel crée de la confiance et va vite, mais peut propager des rumeurs."},
+{t:'rap',ti:"Corrige la copie de Sami",xp:50,ctx:"Sami, élève de Première, a rendu cette copie sur un label de rap. Tu joues le rôle du prof : pour chaque phrase, dis si elle est juste ou fausse.",
+p:[C("Juste ou faux ?",JF,[["« Selon Herzberg, le salaire est un facteur moteur. »",1],["« La motivation intrinsèque vient du plaisir de faire son travail. »",0],["« Chez Maslow, le besoin d'estime est en bas de la pyramide. »",1],["« Le coût du travail, c'est le salaire brut plus les cotisations patronales. »",0],["« Une prime collective peut encourager certains à se reposer sur les autres. »",0],["« Un ingénieur du son sans diplôme n'a forcément aucune compétence. »",1]]),
+N("Sami calcule ensuite le net d'un assistant du label payé 1 900 € brut, avec 22 % de cotisations salariales. Donne le bon résultat :",[["Salaire net (€)",1482]])],
+cor:"Faux : le salaire est un facteur d'hygiène. Juste : intrinsèque = plaisir, fierté. Faux : l'estime est au 4e étage, en bas ce sont les besoins physiologiques. Juste : coût du travail = brut + cotisations patronales. Juste : c'est le passager clandestin. Faux : on peut être compétent sans qualification. Net = 1 900 − 418 = 1 482 €."});
+
+M.sgn2.push(
+{t:'jeu',ti:"Le SI d'un tournoi EA FC",xp:40,ctx:"Une association organise un tournoi EA SPORTS FC de 128 joueurs et s'appuie sur son système d'information.",
+p:[C("Quelle fonction du SI chaque action illustre-t-elle ?",["Collecter","Stocker","Traiter","Diffuser"],[["Le formulaire d'inscription des joueurs",0],["La base de données sur le serveur de l'association",1],["Le calcul automatique du classement après chaque match",2],["La publication de l'arbre du tournoi sur Discord",3]]),
+Q("Les 128 joueurs rédigent ensemble, en même temps, un guide des meilleures tactiques sur un document partagé. C'est…",["De la coopération : chacun fait sa partie seul","Du travail collaboratif / de l'intelligence collective","Un PGI","Du phishing"],1)],
+cor:"Collecter = inscription ; stocker = base de données ; traiter = calcul du classement ; diffuser = publication sur Discord. Travailler ensemble sur le même objet en même temps = collaboration, source d'intelligence collective."},
+{t:'foot',ti:"Les buteurs du Real (base fictive)",xp:60,ctx:"Une base de données (joueurs fictifs) :<br><code>BUTEUR (NumB, Nom, Poste)</code> — 1 Rivera, attaquant ; 2 Okafor, milieu ; 3 Santos, défenseur.<br><code>BUT (NumBut, #NumB, Minute, Competition)</code> — (1, 1, 12, Liga) ; (2, 2, 45, LDC) ; (3, 1, 67, Liga) ; (4, 3, 88, Liga) ; (5, 1, 90, LDC) ; (6, 2, 23, Liga).",
+p:[N("Que renvoie chaque requête ?",[["SELECT COUNT(*) FROM BUT WHERE Competition = 'Liga';",4],["SELECT COUNT(*) FROM BUT WHERE NumB = 1;",3],["SELECT AVG(Minute) FROM BUT;",54.17,0.05],["SELECT MAX(Minute) FROM BUT WHERE Competition = 'LDC';",90]]),
+H("Complète la requête qui affiche le nombre de buts de chaque joueur.","SELECT Nom, [[COUNT]](*) FROM BUTEUR, BUT WHERE BUTEUR.NumB = BUT.[[NumB]] [[GROUP BY]] Nom;")],
+cor:"Liga : 4 buts. Rivera (NumB 1) : 3 buts. AVG = (12 + 45 + 67 + 88 + 90 + 23) ÷ 6 = 325 ÷ 6 ≈ 54,17. MAX en LDC = 90. Requête : SELECT Nom, COUNT(*) FROM BUTEUR, BUT WHERE BUTEUR.NumB = BUT.NumB GROUP BY Nom;"});
+
+M.sgn3.push(
+{t:'edf',ti:"La boutique de Clairefontaine",xp:60,ctx:"Chiffre d'affaires trimestriel de la boutique officielle du Centre national du football (chiffres inventés).",
+p:[G('bar',["T1","T2","T3","T4"],[["CA (k€)",[120,150,90,240]]],"k€","Chiffre d'affaires par trimestre"),
+N("Calcule :",[["CA annuel (k€)",600],["CA trimestriel moyen (k€)",150],["Taux de variation entre T3 et T4 (%)",166.67,0.1],["Part du T4 dans le CA annuel (%)",40]]),
+Q("Le T4 contient une Coupe du monde et Noël. La boutique vend 2 400 maillots avec 3 vendeurs, contre 1 800 avec 4 vendeurs l'an dernier. Elle est devenue…",["Moins efficace","Plus efficiente (plus de ventes avec moins de ressources)","Moins efficiente","Ni efficace ni efficiente"],1)],
+cor:"CA = 600 k€, moyenne 150 k€. T3 → T4 : (240 − 90) ÷ 90 ≈ +166,7 %. T4 = 240 ÷ 600 = 40 % du CA : forte saisonnalité. 800 maillots par vendeur contre 450 : plus efficiente."},
+{t:'jeu',ti:"Le prix d'une manette",xp:60,ctx:"Une start-up française fabrique une manette pour PC. Coût d'achat des composants : 18 € ; coût de production : 12 € ; coût de distribution : 6 € par manette. Elle veut une marge de 25 % sur son coût de revient. TVA : 20 %.",
+p:[N("Calcule :",[["Coût de revient unitaire (€)",36],["Prix de vente HT (€)",45],["Prix de vente TTC (€)",54],["Résultat unitaire (€)",9]]),
+N("Un magasin achète la manette 45 € HT et la revend 60 € HT. Calcule :",[["Taux de marge du magasin (%)",33.33,0.15],["Taux de marque du magasin (%)",25]])],
+cor:"Coût de revient = 18 + 12 + 6 = 36 €. HT = 36 × 1,25 = 45 €. TTC = 45 × 1,2 = 54 €. Résultat = 9 €. Magasin : marge 15 € ; taux de marge = 15 ÷ 45 ≈ 33,3 % ; taux de marque = 15 ÷ 60 = 25 %."});
+
+M.sgn4.push(
+{t:'rap',ti:"Le planning du clip",xp:60,ctx:"Préparation d'un clip de rap : A Écriture du scénario (2 sem.) ; B Repérages (1 sem., après A) ; C Tournage (1 sem., après B) ; D Montage (2 sem., après C) ; E Mixage du son (3 sem., après A) ; F Mise en ligne (1 sem., après D et E).",
+p:[Q("Quel est le chemin critique ?",["A-E-F","A-B-C-D-F","A-B-E-F","A-C-D-F"],1),
+N("Calcule (en semaines) :",[["Durée totale du projet",7],["Marge de la tâche E",1],["Durée si le tournage prend 1 semaine de retard",8],["Durée si le mixage prend 1 semaine de retard",7]])],
+cor:"A-B-C-D-F = 2 + 1 + 1 + 2 + 1 = 7 ; A-E-F = 2 + 3 + 1 = 6. Chemin critique : A-B-C-D-F (7 semaines). E a 1 semaine de marge : un retard d'une semaine sur le mixage ne change rien, un retard sur le tournage (critique) donne 8 semaines."},
+{t:'foot',ti:"Vendre un joueur en livres sterling",xp:50,ctx:"Le FC Porto (cas inventé) vend un joueur à un club anglais pour 30 millions de livres, payés dans un an. Aujourd'hui, 1 £ = 1,17 €.",
+p:[N("Calcule (en millions d'euros) :",[["Valeur en euros au cours d'aujourd'hui",35.1],["Valeur si dans un an 1 £ = 1,12 €",33.6],["Perte liée au change",1.5]]),
+Q("Ce risque est un risque…",["Opérationnel","Financier (risque de change)","Juridique","Humain"],1),
+Q("Le club signe avec sa banque un contrat qui fixe dès aujourd'hui le cours de change. Il…",["Évite le risque","Transfère le risque","Accepte le risque","Augmente le risque"],1)],
+cor:"30 × 1,17 = 35,1 M€ ; 30 × 1,12 = 33,6 M€ ; perte de 1,5 M€. C'est un risque financier (de change). En fixant le cours avec la banque, le club transfère le risque."});
+
+M.mgt1.push(
+{t:'jeu',ti:"Tout le monde veut quelque chose",xp:50,ctx:"Un grand studio de jeux vidéo prépare la suite de son jeu de course. Chaque partie prenante a ses attentes.",
+p:[C("Associe chaque partie prenante à son attente principale.",["Un jeu stable à un prix juste","Des dividendes","Pas de « crunch » avant la sortie","Le respect de la loi et le paiement des impôts","Des commandes régulières"],[["Les joueurs",0],["Les actionnaires",1],["Les salariés",2],["L'État",3],["Les sous-traitants graphiques",4]]),
+Q("La direction veut sortir le jeu 3 mois plus tôt pour satisfaire les actionnaires. Quelle attente risque d'être sacrifiée ?",["Celle de l'État","Celles des salariés (crunch) et des joueurs (bugs)","Celle des sous-traitants uniquement","Aucune"],1)],
+cor:"Joueurs : qualité/prix. Actionnaires : dividendes. Salariés : conditions de travail. État : loi et impôts. Sous-traitants : commandes. Avancer la sortie satisfait les actionnaires mais menace les salariés (crunch) et les joueurs (bugs) : attentes contradictoires que le manager doit arbitrer."},
+{t:'foot',ti:"Les ressources du Real Madrid",xp:40,ctx:"Pour gagner des titres et des revenus, le Real Madrid mobilise de nombreuses ressources.",
+p:[C("Classe chaque ressource.",["Humaine","Financière","Matérielle","Immatérielle"],[["Les joueurs et le staff",0],["Les recettes de billetterie",1],["Le stade Santiago-Bernabéu",2],["La marque Real Madrid",3],["Le fichier de plusieurs millions de fans",3],["Les bus de l'équipe",2]]),
+Q("Quelle ressource est la plus difficile à copier pour un concurrent ?",["Les bus","La marque et l'histoire du club","Les recettes d'une saison","Un terrain d'entraînement"],1)],
+cor:"Humaines : joueurs, staff. Financières : recettes. Matérielles : stade, bus. Immatérielles : marque, données des fans. Les ressources immatérielles (marque, réputation, histoire) sont les plus difficiles à imiter."});
+
+M.mgt2.push(
+{t:'rap',ti:"Plan ou coup de chance ?",xp:50,ctx:"Parcours de plusieurs rappeurs (inventés).",
+p:[C("Stratégie délibérée ou émergente ?",["Délibérée","Émergente"],[["Un artiste annonce son album 6 mois à l'avance avec une campagne calculée",0],["Un son posté pour rire devient un mème, l'artiste construit toute sa carrière dessus",1],["Un label prévoit 3 singles, puis l'album, puis la tournée",0],["Une rappeuse découvre un public au Québec grâce à un streamer et y ouvre une tournée",1]]),
+Q("Selon Mintzberg, la stratégie réellement suivie est…",["Toujours délibérée","Toujours émergente","Souvent un mélange des deux","Décidée par l'État"],2)],
+cor:"Planifié à l'avance = délibéré ; construit à partir d'un succès imprévu = émergent. Mintzberg : la stratégie réalisée mêle souvent les deux."},
+{t:'edf',ti:"Les objectifs de la Fédération",xp:50,ctx:"Extraits d'un plan stratégique (inventé) de la Fédération française de football.",
+p:[C("Quelle est la nature de chaque objectif ?",["Économique","Social","Sociétal / environnemental","Pérennité"],[["Augmenter de 10 % les revenus de sponsoring d'ici 2028",0],["Former 2 000 éducateurs diplômés par an",1],["Réduire de 30 % l'empreinte carbone des déplacements des sélections",2],["Garder des comptes équilibrés pour durer",3]]),
+Q("Faire voyager les Bleus en train plutôt qu'en avion coûte plus cher et prend plus de temps. Cela montre que…",["Les objectifs peuvent se contredire et doivent être arbitrés","Les objectifs sociaux priment toujours","L'objectif économique disparaît","Il n'y a pas de stratégie"],0)],
+cor:"Sponsoring = économique ; éducateurs = social ; carbone = sociétal/environnemental ; comptes équilibrés = pérennité. L'objectif environnemental entre en conflit avec les coûts et la performance : le manager arbitre."});
+
+M.mgt3.push(
+{t:'jeu',ti:"Faire ou faire faire ?",xp:50,ctx:"« HexaSound » (entreprise fictive) fabrique des casques gaming.",
+p:[C("Quelle stratégie ?",["Intégration verticale amont","Intégration verticale aval","Intégration horizontale","Externalisation"],[["Elle rachète l'usine qui fabrique ses haut-parleurs",0],["Elle ouvre ses propres boutiques à Paris et Lyon",1],["Elle rachète un concurrent qui fabrique aussi des casques",2],["Elle confie son service client à une entreprise spécialisée",3]]),
+Q("Principal risque de l'externalisation du service client ?",["Perdre le contrôle de la qualité et dépendre du prestataire","Payer plus d'impôts","Ne plus vendre de casques","Devenir un monopole"],0)],
+cor:"Racheter un fournisseur = intégration amont ; contrôler la distribution = aval ; racheter un concurrent = horizontale ; confier une activité = externalisation (risque : dépendance, qualité, perte de compétences)."},
+{t:'edf',ti:"La bataille des maillots de sélections",xp:60,ctx:"Ventes mondiales de maillots de sélections nationales l'année d'une Coupe du monde (en millions, chiffres inventés).",
+p:[G('bar',["Équipementier A","Équipementier B","Équipementier C","Autres"],[["Ventes (millions)",[4.2,3.1,1.4,1.3]]],"millions","Ventes de maillots de sélections"),
+N("Calcule :",[["Ventes totales du marché (millions)",10],["Part de marché de A (%)",42],["Part de marché de C (%)",14],["Part cumulée des trois grands (%)",87]]),
+Q("Le maillot officiel de l'équipe de France est vendu bien plus cher qu'un t-shirt de sport. L'équipementier suit une stratégie de…",["Domination par les coûts","Différenciation (marque, émotion, appartenance)","Focalisation sur le bas de gamme","Externalisation"],1)],
+cor:"Total = 10 millions. A = 42 %, C = 14 %, trois grands = 87 % : marché très concentré (oligopole). Le maillot officiel vend une appartenance : différenciation par la marque."});
+
+M.droit1.push(
+{t:'foot',ti:"Quel type de règle ?",xp:40,ctx:"Autour d'un match, plusieurs règles guident les comportements.",
+p:[C("Classe chaque règle.",["Règle de droit","Règle morale","Règle de politesse","Règlement sportif"],[["Interdiction de revendre un billet plus cher sans l'accord de l'organisateur",0],["Ne pas mentir à son coéquipier",1],["Serrer la main de l'arbitre à la fin du match",2],["Carton rouge pour un tacle dangereux",3]]),
+Q("Qu'est-ce qui distingue la règle de droit des autres ?",["Elle est écrite","Sa sanction est garantie par l'État","Elle vient d'une religion","Elle ne concerne que les adultes"],1)],
+cor:"Revente interdite = loi (règle de droit). Ne pas mentir = morale. Serrer la main = politesse. Carton rouge = règlement sportif (organisation privée). Seule la règle de droit est sanctionnée par l'État."},
+{t:'rap',ti:"Liberté de création et Constitution",xp:50,ctx:"Un rappeur fictif conteste, lors de son procès, une loi qu'il juge contraire à la liberté d'expression.",
+p:[C("Classe chaque texte.",["Bloc de constitutionnalité","Norme européenne","Loi","Règlement"],[["La Déclaration des droits de l'homme et du citoyen de 1789",0],["Le règlement européen sur les services numériques (DSA)",1],["Un texte voté par l'Assemblée nationale et le Sénat",2],["Un arrêté du maire interdisant les concerts après minuit",3]]),
+H("Complète.","Pendant son procès, il peut poser une [[question prioritaire de constitutionnalité|QPC]], possible depuis [[2010]]. C'est le [[Conseil constitutionnel]] qui vérifie si la loi respecte la Constitution.")],
+cor:"DDHC = bloc de constitutionnalité ; DSA = norme européenne ; texte voté par le Parlement = loi ; arrêté = règlement. La QPC (depuis 2010) permet à un justiciable de saisir le Conseil constitutionnel, via les juridictions suprêmes."});
+
+M.droit2.push(
+{t:'jeu',ti:"Quel mode de preuve ?",xp:40,ctx:"Dans plusieurs litiges entre joueurs et vendeurs de comptes de jeux (cas fictifs), on apporte des preuves.",
+p:[C("Identifie le mode de preuve.",["Acte authentique","Écrit (papier ou électronique)","Témoignage","Aveu","Présomption"],[["Un contrat signé chez un notaire",0],["Un e-mail signé électroniquement",1],["Un ami qui a assisté à la vente",2],["Le vendeur reconnaît devant le juge qu'il n'a pas livré",3],["Le juge déduit de plusieurs indices que le compte a été revendu",4]]),
+Q("Un joueur a enregistré en cachette un appel avec le vendeur. En matière civile, cette preuve…",["Est toujours admise","Est en principe déloyale, mais peut être admise si elle est indispensable et l'atteinte proportionnée","Est un acte authentique","Est un aveu judiciaire"],1)],
+cor:"Notaire = acte authentique ; e-mail signé = écrit électronique ; ami = témoignage ; reconnaissance = aveu ; indices = présomption. L'enregistrement caché est déloyal en principe, mais depuis 2023 le juge civil peut l'admettre s'il est indispensable et proportionné."},
+{t:'foot',ti:"Remets la procédure dans l'ordre",xp:50,ctx:"Un supporter (cas fictif) attaque un club de Ligue 1 après une chute dans une tribune mal entretenue. L'affaire va jusqu'au bout.",
+p:[C("Classe les étapes dans l'ordre (1 = la première).",["1","2","3","4","5"],[["Jugement du tribunal judiciaire",0],["Le club fait appel",1],["Arrêt de la cour d'appel",2],["Pourvoi en cassation",3],["Renvoi devant une autre cour d'appel après cassation",4]]),
+Q("En appel, le club qui conteste le jugement s'appelle…",["Le défendeur","L'appelant","L'intimé","Le procureur"],1)],
+cor:"Tribunal judiciaire → appel → arrêt de la cour d'appel → pourvoi en cassation → (si cassation) renvoi devant une autre cour d'appel. Celui qui fait appel est l'appelant, l'autre partie l'intimé."});
+
+M.droit3.push(
+{t:'edf',ti:"Le patrimoine d'un international",xp:50,ctx:"Un joueur de l'équipe de France (cas fictif) fait le point sur sa situation.",
+p:[C("Classe chaque élément.",["Actif du patrimoine","Passif du patrimoine","Hors patrimoine (droit extrapatrimonial)"],[["Sa maison",0],["Son crédit immobilier",1],["Les primes de match que la Fédération lui doit encore",0],["L'impôt qu'il doit payer",1],["Son droit au respect de sa vie privée",2],["Son honneur",2]]),
+Q("Selon la théorie classique d'Aubry et Rau, une personne a…",["Plusieurs patrimoines","Un seul patrimoine","Un patrimoine seulement si elle est riche","Un patrimoine seulement à sa majorité"],1)],
+cor:"Actif : maison, créances (primes dues). Passif : crédit, impôt. Vie privée et honneur sont des droits extrapatrimoniaux, hors du patrimoine. Théorie classique : toute personne a un patrimoine, et un seul (assoupli pour l'entrepreneur individuel depuis 2022)."},
+{t:'rap',ti:"Qui peut signer ?",xp:50,ctx:"Plusieurs personnes (fictives) veulent signer un contrat avec un label.",
+p:[C("Peut-elle signer seule un contrat d'artiste ?",["Oui","Non"],[["Lina, 17 ans, non émancipée",1],["Yanis, 17 ans, émancipé par le juge",0],["Omar, 19 ans, sans régime de protection",0],["Rémi, 45 ans, sous tutelle",1]]),
+Q("Sofiane, 30 ans, est sous curatelle. Pour signer ce contrat important, il…",["Est représenté par son curateur qui signe à sa place","Signe lui-même, assisté de son curateur","Ne peut jamais signer","Signe seul sans personne"],1)]
+,cor:"Mineur non émancipé : non. Mineur émancipé : oui pour la plupart des actes. Majeur non protégé : oui. Tutelle : représentation, donc non seul. Curatelle : il agit lui-même avec l'assistance du curateur."});
+
+M.droit4.push(
+{t:'foot',ti:"La maison de l'ancien gardien",xp:50,ctx:"Un ancien gardien de but décède. Sa femme reçoit l'usufruit de leur maison, leurs deux enfants la nue-propriété. (Cas fictif.)",
+p:[T("Qui détient quel attribut ?",["Personne","Usus","Fructus","Abusus"],[["La veuve (usufruitière)",{o:["Oui","Non"],a:0},{o:["Oui","Non"],a:0},{o:["Oui","Non"],a:1}],["Les enfants (nus-propriétaires)",{o:["Oui","Non"],a:1},{o:["Oui","Non"],a:1},{o:["Oui","Non"],a:0}]]),
+Q("La veuve loue la maison à des touristes pendant l'été. Qui touche les loyers ?",["Les enfants","La veuve","L'État","Personne"],1),
+Q("Quand la veuve décède, les enfants…",["Perdent la maison","Récupèrent la pleine propriété","Deviennent usufruitiers","Doivent la vendre"],1)],
+cor:"Usufruitier : usus + fructus (habiter, louer, percevoir les loyers). Nu-propriétaire : abusus. À la fin de l'usufruit, les enfants récupèrent la pleine propriété."},
+{t:'jeu',ti:"Copie ou inspiration ?",xp:50,ctx:"Le studio fictif « Pixel Rush » découvre un jeu très proche du sien. Qu'est-ce qui était protégé ?",
+p:[C("Classe chaque élément.",["Protégé par le droit d'auteur","Protégé par une marque déposée","Non protégeable (idée)"],[["L'idée d'un jeu de survie sur une île",2],["Le code source du jeu",0],["Le nom « Pixel Rush », déposé à l'INPI",1],["La musique originale du jeu",0],["La mécanique « construire des murs pour se protéger »",2]]),
+Q("Le concurrent a copié tel quel le code source. C'est…",["Autorisé, c'est de l'inspiration","Une contrefaçon","Une parodie","Une courte citation"],1)],
+cor:"Une idée ou une mécanique de jeu n'est pas protégeable. Le code et la musique (œuvres originales et formalisées) sont protégés par le droit d'auteur, sans dépôt. Le nom déposé est une marque. Copier le code = contrefaçon."});
+
+M.eco1.push(
+{t:'rap',ti:"Que produire, comment, pour qui ?",xp:40,ctx:"Un label indépendant se pose les trois grandes questions économiques.",
+p:[C("Quelle question chaque décision traite-t-elle ?",["Que produire ?","Comment produire ?","Pour qui produire ?"],[["Sortir un album de drill ou de rap mélodique",0],["Enregistrer en studio pro ou en home studio",1],["Viser les 15-25 ans en France ou un public international",2],["Utiliser des outils d'IA pour le mixage",1]]),
+Q("En France, les marchés coordonnent la plupart des choix, mais l'État intervient beaucoup (impôts, aides, services publics). C'est une économie…",["Planifiée","De marché pure","Mixte","De troc"],2)],
+cor:"Le genre musical = que produire ; studio ou IA = comment produire ; le public visé = pour qui. La France est une économie mixte."},
+{t:'edf',ti:"Le chômage des jeunes",xp:50,ctx:"Clairefontaine recrute des apprentis. Le directeur regarde le taux de chômage des 15-24 ans d'un pays fictif.",
+p:[G('line',["2019","2020","2021","2022","2023","2024"],[["Chômage des 15-24 ans (%)",[19.6,20.2,18.9,17.3,17.0,17.5]]],"%","Taux de chômage des 15-24 ans"),
+N("Lis et calcule :",[["Évolution entre 2019 et 2024 (points)",-2.1],["Évolution entre 2023 et 2024 (points)",0.5],["Si la population active des 15-24 ans compte 2,8 millions de personnes en 2024, nombre de chômeurs (milliers)",490]]),
+Q("Quelle phrase de lecture est correcte pour 2024 ?",["17,5 % des jeunes de 15-24 ans sont au chômage","Sur 100 actifs de 15-24 ans, 17,5 sont au chômage","Le chômage a baissé de 17,5 %","17,5 millions de jeunes sont au chômage"],1)],
+cor:"−2,1 points entre 2019 et 2024 ; +0,5 point en 2024. Chômeurs = 2,8 M × 17,5 % = 490 000. Le taux se calcule sur la population active, pas sur tous les jeunes : « sur 100 actifs de 15-24 ans, 17,5 sont au chômage »."});
+
+M.eco2.push(
+{t:'foot',ti:"À qui va la richesse d'un club ?",xp:50,ctx:"Un grand club européen (chiffres inventés) a créé 200 M€ de valeur ajoutée sur la saison.",
+p:[T("Complète le partage de la valeur ajoutée.",["Bénéficiaire","Montant (M€)"],[["Salariés (salaires des joueurs et du personnel)",130],["État et organismes sociaux (impôts, cotisations)",30],["Prêteurs (intérêts)",10],["Actionnaires (dividendes)",0],["Club (mise en réserve)",{v:30}]]),
+N("Calcule :",[["Part de la VA allant aux salariés (%)",65]]),
+Q("Pourquoi les joueurs captent-ils une si grande part ?",["Ce sont des ressources rares avec un fort pouvoir de négociation","La loi l'impose","Ils paient moins d'impôts","Le club n'a pas d'actionnaires"],0)],
+cor:"Réserve = 200 − 130 − 30 − 10 − 0 = 30 M€. Part des salaires = 130 ÷ 200 = 65 %. Les grands joueurs sont rares et très demandés : leur pouvoir de négociation est énorme."},
+{t:'rap',ti:"Le revenu disponible d'un ingé son",xp:50,ctx:"Karim, ingénieur du son, touche par mois 2 200 € de salaire et 200 € de loyer d'un studio qu'il loue. Il paie 520 € de prélèvements obligatoires et reçoit 150 € d'aide au logement.",
+p:[C("Classe chaque revenu.",["Revenu du travail","Revenu du capital","Revenu de transfert"],[["Son salaire",0],["Le loyer du studio",1],["L'aide au logement",2]]),
+N("Calcule (en €) :",[["Revenu primaire",2400],["Revenu disponible",2030]]),
+Q("L'aide au logement relève surtout d'une logique…",["D'assurance","D'assistance / de solidarité","De marché","D'épargne"],1)],
+cor:"Salaire = travail ; loyer = capital ; aide = transfert. Revenu primaire = 2 200 + 200 = 2 400 €. Revenu disponible = 2 400 − 520 + 150 = 2 030 €. L'aide au logement, sous condition de ressources, relève de l'assistance."});
+
+M.eco3.push(
+{t:'jeu',ti:"La console à crédit",xp:60,ctx:"Mehdi achète une console à 600 €. Le magasin propose un crédit en 10 mensualités de 66 €.",
+p:[N("Calcule :",[["Montant total remboursé (€)",660],["Coût du crédit (€)",60],["Coût du crédit en % du prix (%)",10]]),
+Q("Quel indicateur obligatoire permet de comparer le coût de différents crédits ?",["Le PIB","Le TAEG","L'IPC","Le taux de marque"],1),
+Q("Mehdi change d'avis 5 jours après avoir signé ce crédit à la consommation. Il…",["Ne peut rien faire","Peut se rétracter (délai de 14 jours)","Doit payer une amende","Doit attendre 1 an"],1)],
+cor:"10 × 66 = 660 € ; coût du crédit = 60 € (10 % du prix). Le TAEG permet de comparer les crédits. Délai de rétractation de 14 jours pour un crédit à la consommation."},
+{t:'foot',ti:"L'effet de la star",xp:50,ctx:"Ventes mensuelles du maillot d'un club (chiffres inventés). Le club signe une star internationale en juillet.",
+p:[G('line',["Mai","Juin","Juillet","Août","Sept."],[["Maillots vendus (milliers)",[2,2.5,9,7,4]]],"milliers","Ventes de maillots"),
+N("Calcule :",[["Hausse des ventes entre juin et juillet (%)",260],["Ventes totales de mai à septembre (milliers)",24.5]]),
+Q("Quel déterminant de la consommation explique le pic de juillet ?",["La loi d'Engel","L'effet d'imitation / l'effet de mode lié à la star","La baisse de l'épargne de précaution","Le TAEG"],1)],
+cor:"(9 − 2,5) ÷ 2,5 = +260 %. Total = 24,5 milliers. Les fans imitent et veulent le maillot de la star : effet d'imitation, qui retombe ensuite."});
+
+M.eco4.push(
+{t:'rap',ti:"Un album financé par les fans",xp:60,ctx:"Une rappeuse indépendante lance une campagne de financement participatif avec un objectif de 40 000 €. 1 250 fans donnent en moyenne 36 €. La plateforme prend 8 % de commission.",
+p:[N("Calcule :",[["Somme collectée (€)",45000],["Taux de réussite par rapport à l'objectif (%)",112.5],["Commission de la plateforme (€)",3600],["Montant net reçu (€)",41400]]),
+C("Classe chaque mode de financement.",["Financement direct","Financement indirect","Autofinancement"],[["Le financement participatif des fans",0],["Un prêt de sa banque",1],["Les bénéfices de sa dernière tournée réinvestis",2],["Des investisseurs qui achètent des parts de son label",0]])],
+cor:"1 250 × 36 = 45 000 € (112,5 % de l'objectif). Commission = 3 600 € ; net = 41 400 €. Crowdfunding et parts du label = direct ; prêt = indirect ; bénéfices réinvestis = autofinancement."},
+{t:'edf',ti:"D'où vient l'argent des clubs amateurs ?",xp:50,ctx:"Dans une région (chiffres inventés), les banques accordent sur l'année 50 000 € de nouveaux crédits aux clubs de foot amateurs, qui remboursent 35 000 € d'anciens crédits.",
+p:[N("Calcule :",[["Variation de la monnaie en circulation due à ces opérations (€)",15000]]),
+Q("Quand la banque prête 12 000 € à un club, elle…",["Prend l'argent d'un autre client","Crée de la monnaie scripturale par un jeu d'écriture","Demande des billets à la BCE à chaque fois","Utilise l'argent des impôts"],1),
+H("Complète.","La monnaie a trois fonctions : unité de [[compte]], intermédiaire des [[échanges|echanges]] et réserve de [[valeur]].")],
+cor:"Crédits − remboursements = 50 000 − 35 000 = +15 000 € de monnaie. « Les crédits font les dépôts » : la banque crée de la monnaie scripturale, détruite au remboursement. Fonctions : unité de compte, intermédiaire des échanges, réserve de valeur."});
+
+M.eco5.push(
+{t:'rap',ti:"Quel marché pour la musique ?",xp:50,ctx:"Différents marchés autour du rap (situations simplifiées).",
+p:[C("Identifie la structure de marché.",["Monopole","Oligopole","Concurrence monopolistique","Monopsone"],[["Une seule salle de 20 000 places dans la ville",0],["Trois grandes plateformes de billetterie se partagent le marché",1],["Des centaines de beatmakers vendent des instrus un peu différentes",2],["Un festival unique est le seul à acheter les concerts des artistes locaux",3]]),
+Q("Dans le cas du festival unique, qui a le pouvoir de fixer le prix ?",["Les artistes","Le festival (seul acheteur)","L'État","Le public"],1)],
+cor:"Un seul vendeur = monopole ; quelques vendeurs = oligopole ; beaucoup de vendeurs aux produits un peu différents = concurrence monopolistique ; un seul acheteur = monopsone, qui peut imposer des cachets bas."},
+{t:'jeu',ti:"Schumpeter dans le jeu vidéo",xp:50,ctx:"Différentes innovations d'entreprises du jeu vidéo (exemples fictifs).",
+p:[C("Quel type d'innovation selon Schumpeter ?",["Produit","Procédé","Organisation","Débouchés (nouveau marché)"],[["Une console pliable inédite",0],["Une usine de manettes robotisée",1],["Un studio qui passe toute son équipe en télétravail",2],["Lancer un jeu en Inde, où le studio n'était pas présent",3]]),
+Q("Le streaming de jeux a fait chuter les ventes de jeux en boîte et créé de nouveaux métiers. Schumpeter parlerait de…",["Main invisible","Destruction créatrice","Effet de massue","Rationalité limitée"],1)],
+cor:"Console pliable = produit ; usine robotisée = procédé ; télétravail = organisation ; Inde = débouchés. Une innovation qui détruit d'anciennes activités en en créant de nouvelles = destruction créatrice."});
+
 // ===== PRÉ-CONTRÔLES : sujets d'entraînement type contrôle, avec documents =====
 // docs : DX = texte, DT = tableau, DG = graphique. Questions : mêmes parties que les missions (N, Q, C, T, H, R).
 const DX=(ti,h,src)=>({k:'txt',ti,h,src}), DT=(ti,h,r,src)=>({k:'tab',ti,h,r,src}), DG=(ti,k,x,s,u,src)=>({k:'graph',ti,gk:k,x,s,u,src});
@@ -1646,13 +1820,13 @@ function vHome(){
    <div class="in"><div class="eyebrow">Saison 1 · Première STMG</div><h1>Révise comme si c'était une <em>ranked</em>.</h1>
    <p>16 leçons, ${ALL.length} missions et ${PCS.length} pré-contrôles sur le rap, les jeux vidéo, le Real Madrid, le FC Porto et l'équipe de France : calculs, tableaux, QCM, graphiques et rédactions corrigés automatiquement.</p>
    <div class="row">${last?`<a class="btn" href="#lecon-${last.id}">Reprendre : ${esc(last.titre)}</a>`:`<a class="btn" href="#lecon-sgn1">Lancer la première leçon</a>`}<a class="btn ghost" href="#scan">Scanner mon cours</a></div></div></section>
-  ${installHTML()}<section class="stats"><div class="stat"><b>${S.xp}</b><span>XP total</span></div><div class="stat"><b>${done}/${ALL.length}</b><span>Missions jouées</span></div><div class="stat"><b>${cleared}/16</b><span>Leçons validées</span></div><div class="stat"><b>${st}</b><span>Jour${st>1?'s':''} d'affilée</span></div></section>
+  ${installHTML()}
   <section class="view" style="gap:14px"><div class="sechead"><h2>Choisis ta map</h2><p>Une map = une matière du programme</p></div>
   <div class="maps">${PARTS.map(p=>{const g=partProg(p);return `<a class="mapcard" href="#map-${p.id}" style="--pc:${p.col}"><img src="${IMG[p.img]}" alt=""><div class="in"><div class="tag">${esc(p.map)}</div><h3>${esc(p.nom)}</h3><div class="prog"><b style="width:${g.pct}%"></b></div><small>${g.cl}/${g.n} leçons validées · ${g.pct} % des missions</small></div></a>`}).join('')}</div></section>`;
 }
 function vMap(pid){
   setTabs(''); const p=partOf(pid); if(!p) return vHome(); const ls=LESSONS.filter(l=>l.part===pid);
-  return `<section class="banner" style="--pc:${p.col}"><img src="${IMG[p.img]}" alt=""><div class="in"><a class="crumb" href="#home">← Lobby</a><div class="eyebrow" style="color:${p.col}">${esc(p.map)}</div><h1>${esc(p.nom)}</h1><p>${ls.length} leçons · valide les 5 missions de chaque leçon (5/10 minimum)</p></div></section>
+  return `<section class="banner" style="--pc:${p.col}"><img src="${IMG[p.img]}" alt=""><div class="in"><a class="crumb" href="#home">← Lobby</a><div class="eyebrow" style="color:${p.col}">${esc(p.map)}</div><h1>${esc(p.nom)}</h1><p>${ls.length} leçons · valide les 7 missions de chaque leçon (5/10 minimum)</p></div></section>
   <div class="rounds" style="--pc:${p.col}">${ls.map(l=>{const s=lessonState(l);return `<a class="round" href="#lecon-${l.id}"><div class="num">${String(l.n).padStart(2,'0')}</div><div style="min-width:0"><h3>${esc(l.titre)}</h3><p>${esc(l.pitch)}</p></div><div class="st">${l.pcx&&S.done[l.pcx.id]?`<span class="badge">PC ${fmt(S.done[l.pcx.id].best*2)}/20</span>`:''}${s.cleared?'<span class="badge ok">Validée</span>':s.cd+'/'+s.ct}<div class="pips">${core(l).map(m=>`<i class="${passed(m.id)?'on':''}"></i>`).join('')}</div></div></a>`}).join('')}</div>`;
 }
 let lessonTab='cours';
@@ -1696,7 +1870,7 @@ function vRanks(){
   setTabs('rangs'); const cur=rankFor(S.xp).i;
   return `<div class="sechead"><h2>Les rangs</h2><p>${S.xp} XP · ${rankFor(S.xp).next? (rankFor(S.xp).next.x-S.xp)+' XP avant '+rankFor(S.xp).next.n : 'Rang maximum atteint'}</p></div>
   <div class="ranks">${RANKS.map((r,i)=>`<div class="rk ${i===cur?'cur':''} ${i>cur?'lock':''}" style="--rc:${r.c}">${i===cur?'<span class="you">TOI</span>':''}<span class="gem">${emblem(i)}</span><div><h3>${esc(r.n)}</h3><p>${r.x} XP${RANKS[i+1]?' → '+(RANKS[i+1].x-1):' et plus'}</p></div></div>`).join('')}</div>
-  <div class="howxp"><h3 style="font-family:var(--f-disp);font-size:19px">Comment gagner de l'XP</h3><ul><li>Chaque mission rapporte de l'XP proportionnellement à tes bonnes réponses, <b>à la première tentative</b>.</li><li>Valider les 5 missions d'une leçon (5/10 minimum à chacune) : +${LESSON_CLEAR_XP} XP.</li><li>Chaque pré-contrôle (sujet type contrôle, noté sur 20) rapporte jusqu'à 150 XP.</li><li>Lire un cours ne donne pas d'XP. Rejouer une mission sert à s'entraîner, sans XP.</li></ul><p class="note">XP maximum disponible : ${ALL.concat(PCS).reduce((a,m)=>a+m.xp,0)+16*LESSON_CLEAR_XP} XP.</p></div>
+  <div class="howxp"><h3 style="font-family:var(--f-disp);font-size:19px">Comment gagner de l'XP</h3><ul><li>Chaque mission rapporte de l'XP proportionnellement à tes bonnes réponses, <b>à la première tentative</b>.</li><li>Valider les 7 missions d'une leçon (5/10 minimum à chacune) : +${LESSON_CLEAR_XP} XP.</li><li>Chaque pré-contrôle (sujet type contrôle, noté sur 20) rapporte jusqu'à 150 XP.</li><li>Lire un cours ne donne pas d'XP. Rejouer une mission sert à s'entraîner, sans XP.</li></ul><p class="note">XP maximum disponible : ${ALL.concat(PCS).reduce((a,m)=>a+m.xp,0)+16*LESSON_CLEAR_XP} XP.</p></div>
   <div class="howxp save" id="savebox"><h3 style="font-family:var(--f-disp);font-size:19px">Sauvegarde automatique</h3>
   <p class="autosave"><span class="dotok"></span>Activée · dernière sauvegarde <b id="savedat">${savedAgo()}</b></p>
   <p class="note">Tout est enregistré tout seul sur cet appareil, à chaque réponse : XP, missions, pré-contrôles, brouillons en cours et la page où tu t'es arrêté. Rien à faire, même si tu fermes l'app.</p>
