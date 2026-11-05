@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#14111f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="STMG Arena">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="description" content="STMG Arena : révise la Première STMG comme dans un jeu vidéo. 16 leçons, 80 missions corrigées automatiquement, XP et rangs.">
 <title>STMG Arena</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 2 37 15 20 38 3 15Z' fill='%23ff4655'/%3E%3Cpath d='M20 2 28 15 20 38 12 15Z' fill='%23ffd23f'/%3E%3C/svg%3E">
@@ -351,9 +357,60 @@ body::before{display:none}
   .hud{position:relative}
   nav.tabs{position:fixed;bottom:0}
 }
+
+/* ---------- écran de chargement ---------- */
+#splash{position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:radial-gradient(800px 500px at 50% 40%,#2b1640,#0d0b16 70%);transition:opacity .5s ease,visibility .5s}
+#splash.out{opacity:0;visibility:hidden}
+#splash.out .splin{transform:scale(1.08)}
+.splin{display:flex;flex-direction:column;align-items:center;gap:16px;transition:transform .5s ease}
+.splogo{position:relative;width:64px;height:64px;animation:spspin 1.6s cubic-bezier(.6,0,.4,1) infinite}
+.splogo i{position:absolute;width:38px;height:38px;top:13px;border-radius:6px;transform:rotate(45deg)}
+.splogo i:first-child{left:2px;background:var(--red)}
+.splogo i:last-child{left:24px;background:var(--yel);mix-blend-mode:screen}
+@keyframes spspin{0%{transform:rotate(0)}50%{transform:rotate(180deg) scale(.85)}100%{transform:rotate(360deg)}}
+.spname{font-family:var(--f-disp);font-size:28px;letter-spacing:1px;animation:spglow 1.6s ease-in-out infinite alternate}
+@keyframes spglow{from{text-shadow:0 0 0 transparent}to{text-shadow:0 0 22px rgba(52,225,255,.55)}}
+.spbar{width:200px;height:6px;border-radius:9px;background:rgba(255,255,255,.12);overflow:hidden}
+.spbar b{display:block;height:100%;width:40%;border-radius:9px;background:linear-gradient(90deg,var(--cyan),var(--vio),var(--pink));animation:spload 1.1s ease-in-out infinite}
+@keyframes spload{0%{transform:translateX(-110%)}100%{transform:translateX(260%)}}
+.sptip{font-family:var(--f-hud);font-size:19px;letter-spacing:2px;text-transform:uppercase;color:var(--mute)}
+
+/* ---------- transitions de pages ---------- */
+.view.enter>*{animation:rise .5s cubic-bezier(.2,.8,.2,1) both}
+.view.enter>*:nth-child(2){animation-delay:.05s}.view.enter>*:nth-child(3){animation-delay:.1s}.view.enter>*:nth-child(4){animation-delay:.15s}.view.enter>*:nth-child(5){animation-delay:.2s}.view.enter>*:nth-child(n+6){animation-delay:.25s}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.view.enter .maps>*,.view.enter .rounds>*,.view.enter .ranks>*,.view.enter .hist>*,.view.enter .stats>*{animation:pop-in .45s cubic-bezier(.2,1.2,.4,1) both}
+.view.enter .maps>*:nth-child(2),.view.enter .rounds>*:nth-child(2),.view.enter .ranks>*:nth-child(2),.view.enter .stats>*:nth-child(2),.view.enter .hist>*:nth-child(2){animation-delay:.08s}
+.view.enter .maps>*:nth-child(3),.view.enter .rounds>*:nth-child(3),.view.enter .ranks>*:nth-child(3),.view.enter .stats>*:nth-child(3),.view.enter .hist>*:nth-child(3){animation-delay:.14s}
+.view.enter .maps>*:nth-child(4),.view.enter .rounds>*:nth-child(4),.view.enter .ranks>*:nth-child(4),.view.enter .stats>*:nth-child(4),.view.enter .hist>*:nth-child(4){animation-delay:.2s}
+.view.enter .ranks>*:nth-child(n+5),.view.enter .rounds>*:nth-child(n+5),.view.enter .hist>*:nth-child(n+5){animation-delay:.26s}
+@keyframes pop-in{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
+#ltab.tabin>*{animation:rise .35s cubic-bezier(.2,.8,.2,1) both}
+.view.enter .hero img,.view.enter .banner img{animation:zoomout 1.2s cubic-bezier(.2,.8,.2,1) both}
+@keyframes zoomout{from{transform:scale(1.08)}to{transform:none}}
+.btn{transition:transform .12s,box-shadow .12s,filter .15s}
+.btn:active{filter:brightness(1.15)}
+.segs button{transition:background .2s,color .2s}
+.verdict.reveal{animation:pop-in .5s cubic-bezier(.2,1.4,.4,1) both}
+.verdict.reveal .score{animation:ringpop .7s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes ringpop{from{transform:scale(.3) rotate(-90deg);opacity:0}}
+.corbox{animation:rise .5s .25s cubic-bezier(.2,.8,.2,1) both}
+
+/* ---------- divers ---------- */
+.warn{background:color-mix(in srgb,var(--mid) 14%,var(--panel));border:1px solid var(--mid);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;animation:rise .3s both}
+.autosave{margin:0;display:flex;align-items:center;gap:10px;font-weight:700}
+.dotok{width:10px;height:10px;border-radius:50%;background:var(--good);box-shadow:0 0 0 0 rgba(74,222,128,.6);animation:okpulse 2s infinite}
+@keyframes okpulse{70%{box-shadow:0 0 0 10px rgba(74,222,128,0)}100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}}
+details.transfer{border-top:1px dashed var(--line);padding-top:10px}
+details.transfer summary{cursor:pointer;color:var(--mute);font-weight:700;font-size:14px;list-style-position:inside}
+details.transfer[open]{display:flex;flex-direction:column;gap:10px}
+.install{display:flex;gap:12px;flex-wrap:wrap;align-items:center;background:linear-gradient(120deg,color-mix(in srgb,var(--cyan) 14%,var(--panel)),var(--panel));border:1px solid color-mix(in srgb,var(--cyan) 45%,transparent);border-radius:16px;padding:14px 16px}
+@media (max-width:720px){ body.typing nav.tabs{transform:translateY(110%)} nav.tabs{transition:transform .25s} body.typing main{padding-bottom:24px} }
+@media (prefers-reduced-motion:reduce){#splash{display:none}}
 </style>
 </head>
 <body>
+<div id="splash" aria-hidden="true"><div class="splin"><div class="splogo"><i></i><i></i></div><div class="spname">STMG ARENA</div><div class="spbar"><b></b></div><div class="sptip">Chargement de la saison…</div></div></div>
 <header class="hud"><div class="wrap">
   <a class="logo" href="#home"><i></i><span>STMG ARENA</span></a>
   <nav class="tabs" id="tabs" aria-label="Navigation principale">
@@ -811,7 +868,7 @@ cor:"Alerte = 150 + 45 × 8 = 510. Stock moyen = (900 + 600) ÷ 2 = 750. Vendus 
 
 M.mgt1=[
 {t:'foot',ti:"Qui est qui dans le foot ?",xp:50,ctx:"Autour d'un match, plusieurs organisations sont présentes.",
-p:[C("Classe chaque organisation.",["Entreprise","Organisation publique","Association"],[["L'équipementier qui fabrique les maillots du FC Porto",0],["La mairie qui entretient le stade municipal",1],["Le club de foot amateur du quartier (loi 1901)",2],["Un lycée public",1],["Un studio qui développe un jeu de foot",0],["Une association de supporters",2]]),
+p:[C("Classe chaque organisation.",["Entreprise","Organisation publique","Association"],[["L'équipementier qui fabrique les maillots du FC Porto",0],["La mairie qui entretient le stade municipal",1],["Le club de foot amateur du quartier",2],["Un lycée public",1],["Un studio qui développe un jeu de foot",0],["Une association de supporters",2]]),
 Q("Une association peut-elle faire des bénéfices ?",["Non, jamais","Oui, mais elle ne peut pas les distribuer à ses membres","Oui, et elle les distribue aux adhérents","Seulement si elle est publique"],1)],
 cor:"Entreprise = but lucratif ; organisation publique = intérêt général ; association = non lucrative. Une association peut faire des bénéfices mais doit les réinvestir dans son projet."},
 {t:'rap',ti:"Les objectifs de Tiakola",xp:50,ctx:"Le manager de Tiakola écrit plusieurs phrases dans son plan de carrière.",
@@ -1039,9 +1096,9 @@ Q("Pour l'économie, l'épargne sert à…",["Financer l'investissement","Créer
 cor:"360 000 € par an ; 4 320 000 € sur 12 ans. Motifs : précaution, retraite, projet (et placement, transmission). L'épargne finance l'investissement via banques et marchés."},
 {t:'foot',b:1,ti:"Le taux d'épargne en crise",xp:50,ctx:"Taux d'épargne des ménages d'un pays imaginaire (en % du revenu disponible).",
 p:[G('line',["2018","2019","2020","2021","2022","2023"],[["Taux d'épargne (%)",[14.5,15,21,18.5,17,17.5]]],"%","Taux d'épargne des ménages"),
-N("Lis le graphique :",[["Taux maximum atteint (%)",21],["Hausse 2019 → 2020 (points)",6]]),
+N("Lis le graphique :",[["Hausse 2019 → 2020 (points)",6],["Hausse 2019 → 2020 (%)",40],["Écart entre 2020 et 2023 (points)",-3.5]]),
 Q("Comment expliquer le pic de 2020 (crise sanitaire) ?",["Épargne de précaution et consommation empêchée","Hausse des taux de la TVA","Baisse des revenus des riches","Fin du crédit"],0)],
-cor:"Pic à 21 % en 2020 (+6 points) : incertitude → épargne de précaution, et confinements qui empêchent de consommer. Puis retour progressif."},
+cor:"Pic à 21 % en 2020 : +6 points, soit (21 − 15) ÷ 15 = +40 %. Entre 2020 et 2023 : −3,5 points. incertitude → épargne de précaution, et confinements qui empêchent de consommer. Puis retour progressif."},
 {t:'rap',b:1,ti:"Les lois d'Engel",xp:50,ctx:"Ménage A : consommation totale 1 400 €, dont 375 € d'alimentation. Ménage B (plus aisé) : consommation 3 800 €, dont 700 € d'alimentation.",
 p:[N("Calcule les coefficients budgétaires de l'alimentation :",[["Ménage A (%)",26.79,0.2],["Ménage B (%)",18.42,0.2]]),
 Q("Que montre la comparaison ?",["Quand le revenu augmente, la part de l'alimentation baisse","Les riches mangent moins","Les deux ménages dépensent pareil","La part de l'alimentation augmente avec le revenu"],0)],
@@ -1147,7 +1204,7 @@ DX("Doc 2 · Les écharpes officielles","<p>La boutique vend en moyenne <b>30 é
 DX("Doc 3 · Risques identifiés par le directeur commercial","<p>A. Le site de vente en ligne peut être piraté. B. Un incendie peut détruire l'entrepôt. C. Le fournisseur unique d'écharpes peut faire faillite. D. Une petite casse de mugs pendant le transport. E. Le club envisage d'arrêter la vente de feux d'artifice décoratifs, jugés trop dangereux.</p>")],
 p:[T("Doc 1. Complète le début du tableau de remboursement.",["Année","Capital début","Intérêt","Amortissement","Annuité","Capital fin"],[["1",1200000,{v:60000},{v:300000},{v:360000},{v:900000}],["2",{v:900000},{v:45000},{v:300000},{v:345000},{v:600000}]]),
 N("Doc 1 et doc 2. Calcule :",[["Coût total du crédit sur 4 ans (€)",150000],["Stock d'alerte des écharpes",480],["Valeur acquise du placement après 3 ans (€)",212241.6,1]]),
-C("Doc 3. Quelle réponse au risque est la plus adaptée ?",["Éviter","Réduire","Transférer","Accepter"],[["A. Piratage du site (sauvegardes, double authentification)",1],["B. Incendie de l'entrepôt (assurance)",2],["C. Faillite du fournisseur unique (trouver un 2e fournisseur)",1],["D. Petite casse de mugs",3],["E. Arrêter les feux d'artifice décoratifs",0]]),
+C("Doc 3. Quelle réponse au risque est la plus adaptée ?",["Éviter","Réduire","Transférer","Accepter"],[["A. Piratage du site : sauvegardes et double authentification",1],["B. Incendie de l'entrepôt : souscrire une assurance",2],["C. Faillite du fournisseur unique : trouver un 2e fournisseur",1],["D. Petite casse de mugs",3],["E. Arrêter les feux d'artifice décoratifs",0]]),
 Q("Le risque de l'incendie a une probabilité faible mais une gravité très forte. Sa criticité…",["Est nulle","Reste importante à cause de la gravité","Ne dépend que de la probabilité","Est toujours faible"],1),
 R("Le directeur veut passer en flux tendus pour les écharpes. Explique l'intérêt et le risque de ce choix.",[["Intérêt : baisser le coût du stock / trésorerie","cout|tresorerie|argent immobilis|place|stockage"],["Risque : rupture de stock","rupture|manquer|penurie"],["Lien avec le délai / le fournisseur unique","delai|fournisseur|12 jours"],["La performance peut créer des risques","performance|risque"]])],
 cor:"1) Amortissement = 1 200 000 ÷ 4 = 300 000. Année 1 : intérêt 60 000, annuité 360 000, fin 900 000. Année 2 : intérêt 45 000, annuité 345 000, fin 600 000.\n2) Intérêts : 60 000 + 45 000 + 30 000 + 15 000 = 150 000 €. Stock d'alerte = 120 + 30 × 12 = 480. Placement : 200 000 × 1,02³ ≈ 212 241,60 €.\n3) A réduire, B transférer, C réduire (diversifier), D accepter, E éviter.\n4) La criticité combine probabilité et gravité : elle reste importante.\n5) Flux tendus : moins d'argent immobilisé et de place, mais risque de rupture (délai de 12 jours, fournisseur unique) au moment des pics de demande. Chercher la performance crée un nouveau risque."};
@@ -1202,13 +1259,13 @@ PC.droit2={t:'foot',ti:"La loge VIP du Bernabéu",dur:45,xp:150,
 ctx:"Cas fictif soumis au droit français. Hugo, particulier, a acheté à Lina, autre particulière, une place en loge pour un match du Real Madrid au prix de 2 400 €. L'accord s'est fait par appel téléphonique, sans écrit. Lina n'a jamais envoyé la place mais a encaissé un virement.",
 docs:[DX("Doc 1 · Ce dont Hugo dispose","<p>Le relevé bancaire montrant un virement de 2 400 € à Lina, avec le libellé « loge Bernabéu ». Un message vocal de Lina : « T'inquiète, je t'envoie la place lundi. » Le témoignage de son frère, présent pendant l'appel.</p>"),
 DX("Doc 2 · Article 1353 du Code civil","<p>« Celui qui réclame l'exécution d'une obligation doit la prouver. Réciproquement, celui qui se prétend libéré doit justifier le paiement ou le fait qui a produit l'extinction de son obligation. »</p>"),
-DX("Doc 3 · Autres litiges du même week-end","<p>a) Un vendeur de maillots (commerçant) et son fournisseur (société) se disputent une facture. b) Un agent de sécurité conteste son licenciement. c) Un supporter conteste une amende de stationnement de la mairie. d) Un individu est poursuivi pour avoir frappé un steward.</p>")],
+DX("Doc 3 · Autres litiges du même week-end","<p>a) Un vendeur de maillots (commerçant) et son fournisseur (société) se disputent une facture. b) Un agent de sécurité conteste son licenciement. c) Un supporter conteste le refus du maire de l'autoriser à ouvrir une buvette près du stade. d) Un individu est poursuivi pour avoir frappé un steward.</p>")],
 p:[Q("La vente de la place est…",["Un fait juridique","Un acte juridique","Une infraction","Une coutume"],1),
 Q("Doc 2. Qui doit prouver la vente ?",["Lina, la défenderesse","Hugo, le demandeur","Le juge","Personne"],1),
 Q("Doc 1. Le relevé bancaire et le message vocal peuvent constituer…",["Un acte authentique","Des éléments complétant un commencement de preuve par écrit / des indices","Un aveu judiciaire","Rien du tout"],1),
-C("Doc 3. Quelle juridiction en premier degré ?",["Tribunal de commerce","Conseil de prud'hommes","Tribunal administratif","Tribunal correctionnel"],[["a) Commerçant contre fournisseur",0],["b) Agent de sécurité licencié",1],["c) Amende de la mairie",2],["d) Coups portés à un steward",3]]),
+C("Doc 3. Quelle juridiction en premier degré ?",["Tribunal de commerce","Conseil de prud'hommes","Tribunal administratif","Tribunal correctionnel"],[["a) Commerçant contre fournisseur",0],["b) Agent de sécurité licencié",1],["c) Refus du maire (buvette)",2],["d) Coups portés à un steward",3]]),
 R("Résous le cas d'Hugo avec le raisonnement juridique (faits qualifiés, problème, règles, application, solution).",[["Acte juridique / contrat de vente","acte juridique|contrat|vente"],["Plus de 1 500 € : écrit exigé en principe","1 ?500|ecrit"],["Charge de la preuve (art. 1353)","1353|charge de la preuve|demandeur"],["Exceptions : commencement de preuve, témoignage, indices","commencement de preuve|temoign|indice|relev|message"],["Juridiction : tribunal judiciaire","tribunal judiciaire"],["Conclusion claire","par consequent|en consequence|donc"]])],
-cor:"1) Acte juridique (contrat de vente).\n2) Hugo, demandeur (art. 1353).\n3) Indices pouvant compléter un commencement de preuve par écrit.\n4) a) tribunal de commerce ; b) prud'hommes ; c) tribunal administratif (ordre administratif) ; d) tribunal correctionnel (délit).\n5) Faits : Hugo et Lina, particuliers, ont conclu un contrat de vente de 2 400 €. Problème : comment prouver un acte > 1 500 € sans écrit ? Règles : la charge de la preuve pèse sur le demandeur ; écrit exigé au-delà de 1 500 €, sauf commencement de preuve par écrit complété par d'autres éléments. En l'espèce, le virement libellé, le message vocal et le témoignage du frère rendent l'accord vraisemblable. Par conséquent, Hugo peut agir devant le tribunal judiciaire pour obtenir la place ou le remboursement, après une tentative de conciliation."};
+cor:"1) Acte juridique (contrat de vente).\n2) Hugo, demandeur (art. 1353).\n3) Indices pouvant compléter un commencement de preuve par écrit.\n4) a) tribunal de commerce ; b) prud'hommes ; c) tribunal administratif (décision d'une autorité administrative) ; d) tribunal correctionnel (délit).\n5) Faits : Hugo et Lina, particuliers, ont conclu un contrat de vente de 2 400 €. Problème : comment prouver un acte > 1 500 € sans écrit ? Règles : la charge de la preuve pèse sur le demandeur ; écrit exigé au-delà de 1 500 €, sauf commencement de preuve par écrit complété par d'autres éléments. En l'espèce, le virement libellé, le message vocal et le témoignage du frère rendent l'accord vraisemblable. Par conséquent, Hugo peut agir devant le tribunal judiciaire pour obtenir la place ou le remboursement, après une tentative de conciliation."};
 
 PC.droit3={t:'jeu',ti:"Le streamer de 15 ans",dur:40,xp:150,
 ctx:"Enzo, 15 ans, stream sur Fortnite et a 80 000 abonnés. Une marque de boissons énergisantes lui propose un contrat de sponsoring de 12 000 € par an. Ses parents ont créé une SAS, « EZ Prod », pour gérer ses revenus. Cas fictif.",
@@ -1317,7 +1374,12 @@ const BKEY='stmg-arena-backup';
 function loadState(){ for(const k of [KEY,BKEY]){ try{ const r=localStorage.getItem(k); if(r){ const o=JSON.parse(r); if(o&&typeof o==='object'&&o.done) return o; } }catch(e){} } return null; }
 { const o=loadState(); if(o) S=Object.assign(S,o); }
 try{ if(navigator.storage&&navigator.storage.persist) navigator.storage.persist(); }catch(e){}
-const save=()=>{ const j=JSON.stringify(S); try{localStorage.setItem(KEY,j);}catch(e){} try{localStorage.setItem(BKEY,j);}catch(e){} };
+const IDB={ db:null, open(){ return new Promise(res=>{ try{ const r=indexedDB.open('stmg-arena',1); r.onupgradeneeded=()=>r.result.createObjectStore('kv'); r.onsuccess=()=>{ IDB.db=r.result; res(r.result); }; r.onerror=()=>res(null); }catch(e){ res(null); } }); },
+  async get(){ const db=IDB.db||await IDB.open(); if(!db) return null; return new Promise(res=>{ try{ const q=db.transaction('kv').objectStore('kv').get('state'); q.onsuccess=()=>res(q.result||null); q.onerror=()=>res(null); }catch(e){ res(null); } }); },
+  async set(j){ const db=IDB.db||await IDB.open(); if(!db) return; try{ db.transaction('kv','readwrite').objectStore('kv').put(j,'state'); }catch(e){} } };
+let saveT=null;
+const save=()=>{ S.savedAt=Date.now(); const j=JSON.stringify(S); try{localStorage.setItem(KEY,j);}catch(e){} try{localStorage.setItem(BKEY,j);}catch(e){} clearTimeout(saveT); saveT=setTimeout(()=>IDB.set(j),400); const sd=document.getElementById('savedat'); if(sd) sd.textContent=savedAgo(); };
+function savedAgo(){ if(!S.savedAt) return 'pas encore (joue une mission !)'; const s=Math.round((Date.now()-S.savedAt)/1000); if(s<10) return 'à l\'instant'; if(s<60) return 'il y a '+s+' s'; if(s<3600) return 'il y a '+Math.round(s/60)+' min'; return 'le '+new Date(S.savedAt).toLocaleString('fr-FR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}); }
 addEventListener('pagehide',save); document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden') save(); });
 const exportCode=()=>{ const j=JSON.stringify({v:2,xp:S.xp,done:Object.fromEntries(Object.entries(S.done).map(([k,d])=>[k,{best:d.best,last:d.last,ans:d.ans,marks:d.marks,at:d.at,tries:d.tries,gain:d.gain,firstScore:d.firstScore}])),clear:S.clear,days:S.days,last:S.last}); return 'STMG-'+btoa(unescape(encodeURIComponent(j))); };
 const importCode=c=>{ const t=String(c||'').trim().replace(/^STMG-/,''); const o=JSON.parse(decodeURIComponent(escape(atob(t)))); if(!o||typeof o.xp!=='number'||!o.done) throw new Error('bad'); S=Object.assign({xp:0,done:{},clear:{},days:[],last:null},o); save(); };
@@ -1425,6 +1487,7 @@ function wrapLab(s,max){ if(s.length<=max) return [s]; const w=s.split(' '); let
 function niceStep(r){ const p=Math.pow(10,Math.floor(Math.log10(r||1))), f=r/p; return (f<=1?1:f<=2?2:f<=2.5?2.5:f<=5?5:10)*p; }
 
 /* ---------- rendu des missions ---------- */
+function order(seed,n){ let h=2166136261; for(const ch of seed){ h^=ch.charCodeAt(0); h=Math.imul(h,16777619)>>>0; } const idx=[...Array(n).keys()]; for(let k=n-1;k>0;k--){ h=Math.imul(h^(h>>>15),2246822507)>>>0; const j=h%(k+1); [idx[k],idx[j]]=[idx[j],idx[k]]; } return idx; }
 const PK={calc:'CALCUL',qcm:'QCM',cls:'CLASSEMENT',tab:'TABLEAU',trou:'TEXTE À TROUS',redac:'RÉDACTION'};
 function partHTML(m,pi,part,ans,rev,R){
   const id=m.id+'-'+pi, a=ans||{}, dis=R?' disabled':'';
@@ -1434,7 +1497,7 @@ function partHTML(m,pi,part,ans,rev,R){
     h+='<div class="fields">'+part.f.map((f,i)=>{ const v=a[i]??'', r=rev&&rev[i]; return `<div class="field ${R?(r?'is-ok':'is-ko'):''}"><label for="${id}-${i}">${esc(f[0])}</label><input class="num" inputmode="decimal" id="${id}-${i}" value="${esc(v)}"${dis} autocomplete="off">${R&&!r?`<span class="expect">Attendu : ${fmt(f[1])}</span>`:''}</div>`; }).join('')+'</div>';
   } else if(part.ty==='qcm'){
     const multi=part.a.length>1, sel=a.sel||[];
-    h+=(multi?'<p class="note">Plusieurs réponses possibles.</p>':'')+'<div class="opts">'+part.o.map((o,i)=>{ const on=sel.includes(i), good=part.a.includes(i); const cls= R? (good?'is-ok':(on?'is-ko':'')):''; return `<label class="opt ${cls}"><input type="${multi?'checkbox':'radio'}" name="${id}" value="${i}" ${on?'checked':''}${dis}><span>${esc(o)}${R&&good?' <span class="expect">✓ bonne réponse</span>':''}</span></label>`; }).join('')+'</div>';
+    h+=(multi?'<p class="note">Plusieurs réponses possibles.</p>':'')+'<div class="opts">'+order(id,part.o.length).map(i=>[part.o[i],i]).map(([o,i])=>{ const on=sel.includes(i), good=part.a.includes(i); const cls= R? (good?'is-ok':(on?'is-ko':'')):''; return `<label class="opt ${cls}"><input type="${multi?'checkbox':'radio'}" name="${id}" value="${i}" ${on?'checked':''}${dis}><span>${esc(o)}${R&&good?' <span class="expect">✓ bonne réponse</span>':''}</span></label>`; }).join('')+'</div>';
   } else if(part.ty==='cls'){
     h+=part.it.map((it,i)=>{ const v=a[i]??'', r=rev&&rev[i]; return `<div class="clsrow ${R?(r?'is-ok':'is-ko'):''}"><span>${esc(it[0])}${R&&!r?`<br><span class="expect">→ ${esc(part.cats[it[1]])}</span>`:''}</span><select id="${id}-${i}" aria-label="${esc(it[0])}"${dis}><option value="">Choisir…</option>${part.cats.map((c,ci)=>`<option value="${ci}" ${String(v)===String(ci)?'selected':''}>${esc(c)}</option>`).join('')}</select></div>`; }).join('');
   } else if(part.ty==='tab'){
@@ -1490,11 +1553,11 @@ function collect(m){
     const n= part.ty==='calc'?part.f.length : part.ty==='cls'?part.it.length : part.ty==='tab'? part.r.flat().filter(c=>c&&typeof c==='object').length : (part.s.match(/\[\[/g)||[]).length;
     const o={}; for(let i=0;i<n;i++){ const el=document.getElementById(id+'-'+i); o[i]=el?el.value:''; } return o; });
 }
-function okNum(x,v,tol){ const n=parseNum(x); if(isNaN(n)) return false; const t= tol!=null? tol : Math.max(Math.abs(v)*0.005,0.01); return Math.abs(n-v)<=t+1e-9; }
+function okNum(x,v,tol,label){ const n=parseNum(x); if(isNaN(n)) return false; const t= tol!=null? tol : Math.max(Math.abs(v)*0.005,0.01); if(label&&/%/.test(label)&&Math.abs(v)>=1&&Math.abs(n*100-v)<=t+1e-9) return true; if(label&&/propension|elasticit|élasticit/i.test(label)&&Math.abs(v)<1&&Math.abs(n/100-v)<=t+1e-9) return true; return Math.abs(n-v)<=t+1e-9; }
 function grade(m,ans){
   let got=0, tot=0; const marks=m.p.map((part,pi)=>{ const a=ans[pi]||{};
     if(part.ty==='graph') return null;
-    if(part.ty==='calc'){ const r=part.f.map((f,i)=>okNum(a[i],f[1],f[2])); tot+=r.length; got+=r.filter(Boolean).length; return r; }
+    if(part.ty==='calc'){ const r=part.f.map((f,i)=>okNum(a[i],f[1],f[2],f[0])); tot+=r.length; got+=r.filter(Boolean).length; return r; }
     if(part.ty==='qcm'){ const s=(a.sel||[]).slice().sort().join(','), ok= s===part.a.slice().sort().join(','); tot+=1; got+=ok?1:0; return ok; }
     if(part.ty==='cls'){ const r=part.it.map((it,i)=>String(a[i])===String(it[1])); tot+=r.length; got+=r.filter(Boolean).length; return r; }
     if(part.ty==='tab'){ const cells=part.r.flat().filter(c=>c&&typeof c==='object'); const r=cells.map((c,i)=> 'v' in c ? okNum(a[i],c.v,c.tol) : String(a[i])===String(c.a)); tot+=r.length; got+=r.filter(Boolean).length; return r; }
@@ -1503,39 +1566,45 @@ function grade(m,ans){
   });
   return {marks, score: tot? Math.round(got/tot*100)/10 : 0, ratio: tot?got/tot:0};
 }
-function validate(id){
+function countMissing(m,ans){ let n=0; m.p.forEach((part,pi)=>{ const a=ans[pi]; if(!a) return; if(part.ty==='qcm'){ if(!a.sel.length) n++; } else if(part.ty==='redac'){ if(a.t.trim().length<20) n++; } else Object.values(a).forEach(v=>{ if(String(v).trim()==='') n++; }); }); return n; }
+function validate(id,force){
   const m=FIND(id), ans=collect(m);
   const empty=ans.every((a,i)=>{ if(!a) return true; if(a.sel) return !a.sel.length; if('t' in a) return !a.t.trim(); return Object.values(a).every(v=>String(v).trim()===''); });
   if(empty){ toast('Réponds au moins à une question avant de valider.'); return; }
+  const miss=countMissing(m,ans);
+  if(miss>0 && !force){ const box=document.querySelector('#m-'+id+' .row'); let w=document.getElementById('warn-'+id); if(!w){ w=document.createElement('div'); w.id='warn-'+id; w.className='warn'; box.before(w); } w.innerHTML=`<b>${miss} réponse${miss>1?'s':''} manquante${miss>1?'s':''}.</b> L'XP n'est gagnée qu'au premier essai : vérifie avant de valider.<div class="row"><button class="btn" data-force="${id}">Valider quand même</button><button class="btn ghost" data-dismiss="${id}">Je complète</button></div>`; w.scrollIntoView({behavior:'smooth',block:'center'}); return; }
+  stopChrono(id);
   const g=grade(m,ans), prev=S.done[id], first=!prev;
   const gain= first? Math.round(m.xp*g.ratio) : 0;
   S.done[id]={best: prev? Math.max(prev.best,g.score):g.score, last:g.score, ans, marks:g.marks, at:Date.now(), tries:(prev?prev.tries:0)+1, gain, firstScore: prev?prev.firstScore:g.score};
   if(S.draft) delete S.draft[id];
   touchDay(); save();
-  const el=document.getElementById('m-'+id); el.outerHTML=missionHTML(m,'review');
+  const el=document.getElementById('m-'+id); el.outerHTML=missionHTML(m,'review'); revealScore(id);
   document.getElementById('m-'+id).scrollIntoView({behavior:'smooth',block:'start'});
   if(gain>0) gainXP(gain, m.pc?'Pré-contrôle : '+fmt(g.score*2)+'/20':(g.score>=8?'Mission réussie':g.score>=5?'Mission validée':'Bonnes réponses'));
   const l=lessonOf(m.lesson); if(lessonState(l).cleared && !S.clear[l.id]){ S.clear[l.id]=1; save(); gainXP(LESSON_CLEAR_XP,'Leçon validée'); }
   hud();
 }
 
+function revealScore(id){ const box=document.querySelector('#m-'+id+' .verdict'); if(!box) return; box.classList.add('reveal'); const s=box.querySelector('.score'); if(!s||reduceMotion()) return; const txt=s.firstChild, target=parseFloat(String(txt.textContent).replace(',','.'))||0; const t0=performance.now(); const st=now=>{ const p=Math.min(1,(now-t0)/800), e=1-Math.pow(1-p,3); txt.textContent=fmt(Math.round(target*e*10)/10); if(p<1) requestAnimationFrame(st); else txt.textContent=fmt(target); }; requestAnimationFrame(st); }
+const reduceMotion=()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 /* ---------- vues ---------- */
 function setTabs(v){ document.querySelectorAll('#tabs a').forEach(a=>a.classList.toggle('on',a.dataset.v===v)); }
 function vHome(){
   setTabs('home');
-  const done=Object.keys(S.done).length, cleared=Object.keys(S.clear).length, st=streak(), last=S.last&&lessonOf(S.last);
+  const done=ALL.filter(m=>S.done[m.id]).length, cleared=Object.keys(S.clear).length, st=streak(), last=S.last&&lessonOf(S.last);
   return `<section class="hero"><img src="${IMG.hero}" alt="Héros de jeu vidéo en plein saut au-dessus d'une ville néon">
    <div class="in"><div class="eyebrow">Saison 1 · Première STMG</div><h1>Révise comme si c'était une <em>ranked</em>.</h1>
    <p>16 leçons, ${ALL.length} missions et ${PCS.length} pré-contrôles sur le rap, les jeux vidéo, le Real Madrid, le FC Porto et l'équipe de France : calculs, tableaux, QCM, graphiques et rédactions corrigés automatiquement.</p>
    <div class="row">${last?`<a class="btn" href="#lecon-${last.id}">Reprendre : ${esc(last.titre)}</a>`:`<a class="btn" href="#lecon-sgn1">Lancer la première leçon</a>`}<a class="btn ghost" href="#scan">Scanner mon cours</a></div></div></section>
-  <section class="stats"><div class="stat"><b>${S.xp}</b><span>XP total</span></div><div class="stat"><b>${done}/${ALL.length}</b><span>Missions jouées</span></div><div class="stat"><b>${cleared}/16</b><span>Leçons validées</span></div><div class="stat"><b>${st}</b><span>Jour${st>1?'s':''} d'affilée</span></div></section>
+  ${installHTML()}<section class="stats"><div class="stat"><b>${S.xp}</b><span>XP total</span></div><div class="stat"><b>${done}/${ALL.length}</b><span>Missions jouées</span></div><div class="stat"><b>${cleared}/16</b><span>Leçons validées</span></div><div class="stat"><b>${st}</b><span>Jour${st>1?'s':''} d'affilée</span></div></section>
   <section class="view" style="gap:14px"><div class="sechead"><h2>Choisis ta map</h2><p>Une map = une matière du programme</p></div>
   <div class="maps">${PARTS.map(p=>{const g=partProg(p);return `<a class="mapcard" href="#map-${p.id}" style="--pc:${p.col}"><img src="${IMG[p.img]}" alt=""><div class="in"><div class="tag">${esc(p.map)}</div><h3>${esc(p.nom)}</h3><div class="prog"><b style="width:${g.pct}%"></b></div><small>${g.cl}/${g.n} leçons validées · ${g.pct} % des missions</small></div></a>`}).join('')}</div></section>`;
 }
 function vMap(pid){
   setTabs(''); const p=partOf(pid); if(!p) return vHome(); const ls=LESSONS.filter(l=>l.part===pid);
   return `<section class="banner" style="--pc:${p.col}"><img src="${IMG[p.img]}" alt=""><div class="in"><a class="crumb" href="#home">← Lobby</a><div class="eyebrow" style="color:${p.col}">${esc(p.map)}</div><h1>${esc(p.nom)}</h1><p>${ls.length} leçons · valide les 3 missions principales de chaque leçon (5/10 minimum)</p></div></section>
-  <div class="rounds" style="--pc:${p.col}">${ls.map(l=>{const s=lessonState(l);return `<a class="round" href="#lecon-${l.id}"><div class="num">${String(l.n).padStart(2,'0')}</div><div style="min-width:0"><h3>${esc(l.titre)}</h3><p>${esc(l.pitch)}</p></div><div class="st">${s.cleared?'<span class="badge ok">Validée</span>':s.cd+'/'+s.ct}<div class="pips">${core(l).map(m=>`<i class="${passed(m.id)?'on':''}"></i>`).join('')}${bonus(l).map(m=>`<i class="bonus ${passed(m.id)?'on':''}"></i>`).join('')}</div></div></a>`}).join('')}</div>`;
+  <div class="rounds" style="--pc:${p.col}">${ls.map(l=>{const s=lessonState(l);return `<a class="round" href="#lecon-${l.id}"><div class="num">${String(l.n).padStart(2,'0')}</div><div style="min-width:0"><h3>${esc(l.titre)}</h3><p>${esc(l.pitch)}</p></div><div class="st">${l.pcx&&S.done[l.pcx.id]?`<span class="badge">PC ${fmt(S.done[l.pcx.id].best*2)}/20</span>`:''}${s.cleared?'<span class="badge ok">Validée</span>':s.cd+'/'+s.ct}<div class="pips">${core(l).map(m=>`<i class="${passed(m.id)?'on':''}"></i>`).join('')}${bonus(l).map(m=>`<i class="bonus ${passed(m.id)?'on':''}"></i>`).join('')}</div></div></a>`}).join('')}</div>`;
 }
 let lessonTab='cours';
 function vLesson(id){
@@ -1572,12 +1641,15 @@ function vRanks(){
   return `<div class="sechead"><h2>Les rangs</h2><p>${S.xp} XP · ${rankFor(S.xp).next? (rankFor(S.xp).next.x-S.xp)+' XP avant '+rankFor(S.xp).next.n : 'Rang maximum atteint'}</p></div>
   <div class="ranks">${RANKS.map((r,i)=>`<div class="rk ${i===cur?'cur':''} ${i>cur?'lock':''}" style="--rc:${r.c}">${i===cur?'<span class="you">TOI</span>':''}<span class="gem">${emblem(i)}</span><div><h3>${esc(r.n)}</h3><p>${r.x} XP${RANKS[i+1]?' → '+(RANKS[i+1].x-1):' et plus'}</p></div></div>`).join('')}</div>
   <div class="howxp"><h3 style="font-family:var(--f-disp);font-size:19px">Comment gagner de l'XP</h3><ul><li>Chaque mission rapporte de l'XP proportionnellement à tes bonnes réponses, <b>à la première tentative</b>.</li><li>Valider les 3 missions principales d'une leçon (5/10 minimum) : +${LESSON_CLEAR_XP} XP.</li><li>Les missions bonus rapportent de l'XP sans être obligatoires.</li><li>Chaque pré-contrôle (sujet type contrôle, noté sur 20) rapporte jusqu'à 150 XP.</li><li>Lire un cours ne donne pas d'XP. Rejouer une mission sert à s'entraîner, sans XP.</li></ul><p class="note">XP maximum disponible : ${ALL.concat(PCS).reduce((a,m)=>a+m.xp,0)+16*LESSON_CLEAR_XP} XP.</p></div>
-  <div class="howxp save" id="savebox"><h3 style="font-family:var(--f-disp);font-size:19px">Ma sauvegarde</h3>
-  <p class="note">Ta progression est enregistrée automatiquement sur cet appareil, même si tu fermes l'app. Pour la garder en changeant de téléphone ou de navigateur, copie ton code de sauvegarde et colle-le sur l'autre appareil.</p>
-  <div class="row"><button class="btn" id="copysave">Copier mon code de sauvegarde</button></div>
+  <div class="howxp save" id="savebox"><h3 style="font-family:var(--f-disp);font-size:19px">Sauvegarde automatique</h3>
+  <p class="autosave"><span class="dotok"></span>Activée · dernière sauvegarde <b id="savedat">${savedAgo()}</b></p>
+  <p class="note">Tout est enregistré tout seul sur cet appareil, à chaque réponse : XP, missions, pré-contrôles, brouillons en cours et la page où tu t'es arrêté. Rien à faire, même si tu fermes l'app.</p>
+  <details class="transfer"><summary>Changer de téléphone ou de navigateur ?</summary>
+  <p class="note">Copie ce code sur l'ancien appareil et colle-le sur le nouveau.</p>
+  <div class="row"><button class="btn" id="copysave">Copier mon code de transfert</button></div>
   <label class="note" for="savecode">Code de sauvegarde</label>
-  <textarea id="savecode" style="min-height:80px;font-size:13px" placeholder="Colle ici un code de sauvegarde pour récupérer ta progression"></textarea>
-  <div class="row"><button class="btn ghost" id="loadsave">Restaurer cette progression</button><span class="note" id="savemsg" role="status"></span></div></div>`;
+  <textarea id="savecode" style="min-height:80px;font-size:13px" placeholder="Colle ici le code de transfert venant de l\'autre appareil"></textarea>
+  <div class="row"><button class="btn ghost" id="loadsave">Restaurer cette progression</button><span class="note" id="savemsg" role="status"></span></div></details></div>`;
 }
 function vScan(){
   setTabs('scan');
@@ -1629,7 +1701,7 @@ function runMatch(){
 
 /* ---------- routeur ---------- */
 function route(){
-  const h=(location.hash||'#home').slice(1); let html, after=null;
+  const h=(location.hash||'#home').slice(1); if(S.at!==h||S.tab!==lessonTab){ S.at=h; S.tab=lessonTab; save(); } let html, after=null;
   if(h.startsWith('map-')) html=vMap(h.slice(4));
   else if(h.startsWith('lecon-')) html=vLesson(h.slice(6));
   else if(h.startsWith('revoir-')) html=vReview(h.slice(7));
@@ -1637,15 +1709,17 @@ function route(){
   else if(h==='rangs') html=vRanks();
   else if(h==='scan') html=vScan();
   else html=vHome();
-  $('#view').innerHTML=html; hud(); if(h==='scan') bindScan(); if(h==='rangs') bindSave(); { const sc=document.getElementById('scroller'); if(sc) sc.scrollTop=0; else window.scrollTo(0,0); }
+  const v=$('#view'); v.innerHTML=html; if(!reduceMotion()){ v.classList.remove('enter'); void v.offsetWidth; v.classList.add('enter'); } hud(); if(h==='scan') bindScan(); if(h==='rangs') bindSave(); { const sc=document.getElementById('scroller'); if(sc) sc.scrollTop=0; else window.scrollTo(0,0); }
 }
 window.addEventListener('hashchange',()=>{ if(location.hash.startsWith('#lecon-')) lessonTab='cours'; route(); });
 document.addEventListener('input',e=>{ const m=e.target.closest&&e.target.closest('.mission'); if(!m||e.target.disabled) return; const id=m.id.slice(2), mm=FIND(id); if(!mm) return; S.draft=S.draft||{}; S.draft[id]=collect(mm); save(); });
 document.addEventListener('change',e=>{ if(e.target.matches('.mission input[type=radio],.mission input[type=checkbox],.mission select')) e.target.dispatchEvent(new Event('input',{bubbles:true})); });
 document.addEventListener('click',e=>{
   const b=e.target.closest('button'); if(!b) return;
-  if(b.dataset.tab){ lessonTab=b.dataset.tab; const id=(location.hash.match(/lecon-(\w+)/)||[])[1]||S.last; $('#view').innerHTML=vLesson(id); hud(); return; }
-  if(b.dataset.validate){ stopChrono(b.dataset.validate); return validate(b.dataset.validate); }
+  if(b.dataset.tab){ lessonTab=b.dataset.tab; S.tab=lessonTab; save(); const id=(location.hash.match(/lecon-(\w+)/)||[])[1]||S.last; const v=$('#view'), y=document.getElementById('scroller').scrollTop; v.innerHTML=vLesson(id); document.getElementById('scroller').scrollTop=Math.min(y,v.querySelector('.segs').offsetTop-8); const lt=document.getElementById('ltab'); if(lt&&!reduceMotion()) lt.classList.add('tabin'); hud(); return; }
+  if(b.dataset.validate){ return validate(b.dataset.validate); }
+  if(b.dataset.force){ stopChrono(b.dataset.force); return validate(b.dataset.force,true); }
+  if(b.dataset.dismiss){ const w=document.getElementById('warn-'+b.dataset.dismiss); if(w) w.remove(); return; }
   if(b.dataset.chrono){ startChrono(b.dataset.chrono,b); return; }
   if(b.dataset.review){ const m=FIND(b.dataset.review); document.getElementById('m-'+m.id).outerHTML=missionHTML(m,'review'); return; }
   if(b.dataset.retry){ const m=FIND(b.dataset.retry); if(S.draft) delete S.draft[m.id]; document.getElementById('m-'+m.id).outerHTML=missionHTML(m); document.getElementById('m-'+m.id).scrollIntoView({behavior:'smooth',block:'start'}); return; }
@@ -1662,12 +1736,24 @@ const chronos={};
 function startChrono(id,btn){ if(chronos[id]) return; const t0=Date.now(), el=document.getElementById('clk-'+id); el.hidden=false; btn.hidden=true;
   chronos[id]=setInterval(()=>{ const e=document.getElementById('clk-'+id); if(!e){ clearInterval(chronos[id]); delete chronos[id]; return; } const s=Math.floor((Date.now()-t0)/1000); e.textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); },1000); }
 function stopChrono(id){ if(chronos[id]){ clearInterval(chronos[id]); delete chronos[id]; } }
+function bootDone(){ const sp=document.getElementById('splash'); if(!sp) return; const imgs=[...document.querySelectorAll('#view img')]; const t0=performance.now();
+  Promise.race([Promise.all(imgs.map(i=>i.decode?i.decode().catch(()=>{}):Promise.resolve())), new Promise(r=>setTimeout(r,2500))]).then(()=>{ const wait=Math.max(0,700-(performance.now()-t0)); setTimeout(()=>{ sp.classList.add('out'); setTimeout(()=>sp.remove(),600); },reduceMotion()?0:wait); }); }
 /* ---------- pas de zoom ---------- */
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault(),{passive:false}));
 document.addEventListener('touchmove',e=>{ if(e.touches&&e.touches.length>1) e.preventDefault(); },{passive:false});
 addEventListener('wheel',e=>{ if(e.ctrlKey||e.metaKey) e.preventDefault(); },{passive:false});
 addEventListener('keydown',e=>{ if((e.ctrlKey||e.metaKey)&&['+','-','=','0','_'].includes(e.key)) e.preventDefault(); });
-hud(); route();
+if(!location.hash && S.at && S.at!=='home'){ lessonTab=S.tab||'cours'; history.replaceState(null,'','#'+S.at); } else if(location.hash.startsWith('#lecon-')&&S.at===location.hash.slice(1)) lessonTab=S.tab||'cours';
+(async()=>{ if(!S.savedAt){ try{ const j=await IDB.get(); if(j){ const o=JSON.parse(j); if(o&&o.done&&Object.keys(o.done).length){ S=Object.assign(S,o); save(); route(); toast('Progression récupérée'); } } }catch(e){} } })();
+/* clavier ouvert sur téléphone : on masque la barre d'onglets */
+document.addEventListener('focusin',e=>{ if(e.target.matches('input.num,input.txt,textarea,select')) document.body.classList.add('typing'); });
+document.addEventListener('focusout',()=>setTimeout(()=>{ if(!document.activeElement||!document.activeElement.matches('input.num,input.txt,textarea,select')) document.body.classList.remove('typing'); },50));
+/* installation sur l'écran d'accueil */
+let deferredInstall=null; addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); deferredInstall=e; const b=document.getElementById('installbtn'); if(b) b.hidden=false; });
+function installHTML(){ const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone; if(standalone) return ''; let off=false; try{ off=localStorage.getItem('stmg-install-off')==='1'; }catch(e){}; if(off) return ''; const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  return `<div class="install" id="installbox"><div style="flex:1;min-width:200px"><b>Installe STMG Arena comme une vraie app</b><p class="note">${ios?'Dans Safari, touche le bouton Partager puis « Sur l\'écran d\'accueil ». L\'app s\'ouvrira en plein écran et ta progression sera mieux protégée.':'Ajoute-la à ton écran d\'accueil : elle s\'ouvrira en plein écran, comme une appli.'}</p></div><div class="row">${ios?'':`<button class="btn" id="installbtn" ${deferredInstall?'':'hidden'}>Installer</button>`}<button class="btn ghost" id="installoff">Plus tard</button></div></div>`; }
+document.addEventListener('click',async e=>{ const t=e.target.closest('#installbtn,#installoff'); if(!t) return; if(t.id==='installbtn'&&deferredInstall){ deferredInstall.prompt(); deferredInstall=null; } try{ localStorage.setItem('stmg-install-off','1'); }catch(er){} const b=document.getElementById('installbox'); if(b) b.remove(); });
+hud(); route(); bootDone();
 })();
 
 </script>

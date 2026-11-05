@@ -15,7 +15,9 @@ Toute l'app tient dans un seul fichier, `index.html` (HTML, CSS et JavaScript, i
 - **XP et rangs** : l'XP se gagne avec les bonnes réponses (premier essai) et en validant une leçon. Animation en anneau autour de l'emblème du rang à chaque gain, avec promotion (passable). 9 rangs avec emblèmes dessinés en SVG.
 - **Arène** : historique des missions jouées, avec note et copie corrigée.
 - **Scanner** : photo du cours → lecture du texte sur l'appareil (Tesseract.js, chargé depuis jsDelivr) → la bonne leçon.
-- **Sauvegarde** : la progression est enregistrée automatiquement sur l'appareil. Dans l'onglet Rangs, un code de sauvegarde permet de la transférer sur un autre téléphone ou navigateur.
+- **Sauvegarde automatique** : XP, missions, pré-contrôles, brouillons et dernière page ouverte sont enregistrés à chaque action (localStorage + copie dans IndexedDB). Un code de transfert (onglet Rangs) permet de changer d'appareil.
+- **Installable** : `manifest.webmanifest` et icônes pour l'ajouter à l'écran d'accueil (plein écran, comme une appli).
+- **Animations** : écran de chargement, transitions entre les pages, apparition des cartes en cascade, révélation de la note.
 - **Comme une vraie app** : en-tête et barre d'onglets fixes, seul le contenu défile ; zoom désactivé ; champs adaptés au tactile.
 
 ## Modifier l'app
