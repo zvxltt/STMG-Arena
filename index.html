@@ -407,6 +407,27 @@ details.transfer[open]{display:flex;flex-direction:column;gap:10px}
 .install{display:flex;gap:12px;flex-wrap:wrap;align-items:center;background:linear-gradient(120deg,color-mix(in srgb,var(--cyan) 14%,var(--panel)),var(--panel));border:1px solid color-mix(in srgb,var(--cyan) 45%,transparent);border-radius:16px;padding:14px 16px}
 @media (max-width:720px){ body.typing nav.tabs{transform:translateY(110%)} nav.tabs{transition:transform .25s} body.typing main{padding-bottom:24px} }
 @media (prefers-reduced-motion:reduce){#splash{display:none}}
+
+/* ---------- documents : jamais plus larges que l'écran ---------- */
+.docs>*,.doc,.mission,.part,.missions>*{min-width:0}
+.doc table.t{min-width:0;width:100%}
+.doc table.t td,.doc table.t th{overflow-wrap:break-word;hyphens:auto}
+.doc .chart svg{min-width:0}
+@media (max-width:620px){ .doc table.t{font-size:13px} .doc table.t th{font-size:16px;padding:5px 6px} .doc table.t td{padding:5px 6px} .doc .tabhint{display:none} }
+
+/* ---------- missions une par une ---------- */
+.stepper{display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.steps{display:flex;align-items:center;gap:0;max-width:100%}
+.stepline{display:block;width:clamp(14px,4vw,34px);height:3px;background:var(--line)}
+.step{width:42px;height:42px;border-radius:12px;border:2px solid var(--line);background:var(--panel);color:var(--mute);font-family:var(--f-hud);font-size:22px;line-height:1;display:grid;place-items:center;transform:rotate(45deg);transition:transform .2s,border-color .2s,background .2s;flex:none;padding:0}
+.step span{transform:rotate(-45deg);padding-top:3px}
+.step.ok{background:var(--good);border-color:var(--good);color:var(--bg)}
+.step.ko{background:color-mix(in srgb,var(--bad) 30%,var(--panel));border-color:var(--bad);color:var(--fg)}
+.step.todo{border-color:var(--pc,var(--yel));color:var(--fg);animation:steppulse 1.6s ease-in-out infinite}
+.step.lock{opacity:.45;cursor:not-allowed}
+.step.cur{transform:rotate(45deg) scale(1.15);box-shadow:0 0 0 3px color-mix(in srgb,var(--pc,var(--yel)) 45%,transparent)}
+@keyframes steppulse{50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--pc,var(--yel)) 25%,transparent)}}
+@media (max-width:420px){ .step{width:36px;height:36px;font-size:19px} }
 </style>
 </head>
 <body>
@@ -1461,7 +1482,7 @@ function playFx(){
 }
 
 /* ---------- progression ---------- */
-const core=l=>l.ms.filter(m=>!m.b), bonus=l=>l.ms.filter(m=>m.b);
+const core=l=>l.ms, bonus=l=>[];
 const best=id=>S.done[id]?S.done[id].best:null;
 const passed=id=>(best(id)||0)>=5;
 function lessonState(l){ const c=core(l), cd=c.filter(m=>passed(m.id)).length; return {cd, ct:c.length, bd:bonus(l).filter(m=>passed(m.id)).length, bt:bonus(l).length, cleared:cd===c.length}; }
@@ -1528,7 +1549,7 @@ function missionHTML(m,mode){
   const ans = rev? rev.ans : (S.draft&&S.draft[m.id]) || [];
   let qn=0;
   return `<article class="mission ${m.pc?'pcx':''}" id="m-${m.id}" style="--tc:${t.c}">
-   <div class="mhead">${m.pc?'<span class="pctag">Pré-contrôle</span>':''}<span class="ttag">${t.n}</span>${m.b?'<span class="btag">Bonus</span>':''}<h3>${esc(m.ti)}</h3>${d?`<span class="badge ${d.best>=5?'ok':''}">Record ${on20(m,d.best)}</span>`:''}<span class="xp">${m.xp} XP</span></div>
+   <div class="mhead">${m.pc?'<span class="pctag">Pré-contrôle</span>':''}<span class="ttag">${t.n}</span><h3>${esc(m.ti)}</h3>${d?`<span class="badge ${d.best>=5?'ok':''}">Record ${on20(m,d.best)}</span>`:''}<span class="xp">${m.xp} XP</span></div>
    ${m.pc?`<div class="pcmeta"><span>Durée conseillée : <b>${m.dur} min</b></span><span>${m.docs.length} documents · ${m.p.length} questions</span>${rev?'':`<button class="btn ghost chrono" data-chrono="${m.id}">Lancer le chrono</button><span class="clock" id="clk-${m.id}" hidden>00:00</span>`}</div>`:''}
    <p class="ctx">${m.ctx}</p>
    ${m.pc?docsHTML(m)+'<h4 class="qhead">Questions</h4>':''}
@@ -1536,12 +1557,15 @@ function missionHTML(m,mode){
    ${rev? reviewFooter(m,rev) : `<div class="row"><button class="btn cyan" data-validate="${m.id}">Valider ma réponse</button>${d?`<button class="btn ghost" data-review="${m.id}">Revoir ma dernière correction</button>`:''}<span class="lockcor">Le corrigé s'affiche une fois ta réponse validée.</span></div>`}
   </article>`;
 }
+function nextBtn(m){ if(m.pc) return `<a class="btn ghost" href="#lecon-${m.lesson}">Retour à la leçon</a>`; const l=lessonOf(m.lesson), i=l.ms.indexOf(m);
+  if(i<l.ms.length-1) return `<button class="btn" data-step="${l.id}|${i+1}">Mission suivante →</button>`;
+  return l.pcx? `<button class="btn" data-tab="pc">Passer au pré-contrôle →</button>` : `<a class="btn" href="#map-${l.part}">Leçon suivante →</a>`; }
 function reviewFooter(m,d){
   const sc=d.last, col=sc>=8?'var(--good)':sc>=5?'var(--mid)':'var(--bad)';
   const word= sc>=9?'Ace ! Copie parfaite.': sc>=7?'Clutch, très bonne réponse.': sc>=5?'Round gagné, mais il reste des erreurs.':'Round perdu : relis la correction et retente.';
   return `<div class="verdict"><div class="score" style="border:4px solid ${col};color:${col}">${m.pc?fmt(sc*2):fmt(sc)}<small>/${m.pc?20:10}</small></div><div style="flex:1;min-width:180px"><b>${word}</b><span class="note">${d.gain>0?'+'+d.gain+' XP gagnés':(d.tries>1?'Partie d\'entraînement : pas d\'XP sur les nouvelles tentatives':'Pas d\'XP gagné sur cette tentative')}</span></div></div>
   <div class="corbox"><h4>Corrigé</h4><p>${esc(m.cor)}</p></div>
-  <div class="row"><button class="btn ghost" data-retry="${m.id}">Rejouer (sans XP)</button><a class="btn ghost" href="#lecon-${m.lesson}">Retour à la leçon</a></div>`;
+  <div class="row">${nextBtn(m)}<button class="btn ghost" data-retry="${m.id}">Rejouer (sans XP)</button></div>`;
 }
 
 /* ---------- correction automatique ---------- */
@@ -1579,13 +1603,14 @@ function validate(id,force){
   S.done[id]={best: prev? Math.max(prev.best,g.score):g.score, last:g.score, ans, marks:g.marks, at:Date.now(), tries:(prev?prev.tries:0)+1, gain, firstScore: prev?prev.firstScore:g.score};
   if(S.draft) delete S.draft[id];
   touchDay(); save();
-  const el=document.getElementById('m-'+id); el.outerHTML=missionHTML(m,'review'); revealScore(id);
+  const el=document.getElementById('m-'+id); el.outerHTML=missionHTML(m,'review'); revealScore(id); refreshSteps(m);
   document.getElementById('m-'+id).scrollIntoView({behavior:'smooth',block:'start'});
   if(gain>0) gainXP(gain, m.pc?'Pré-contrôle : '+fmt(g.score*2)+'/20':(g.score>=8?'Mission réussie':g.score>=5?'Mission validée':'Bonnes réponses'));
   const l=lessonOf(m.lesson); if(lessonState(l).cleared && !S.clear[l.id]){ S.clear[l.id]=1; save(); gainXP(LESSON_CLEAR_XP,'Leçon validée'); }
   hud();
 }
 
+function refreshSteps(m){ if(m.pc) return; const l=lessonOf(m.lesson), st=document.querySelector('.stepper'); if(!st) return; const tmp=document.createElement('div'); tmp.innerHTML=stepperHTML(l); st.replaceWith(tmp.querySelector('.stepper')); const segBtn=document.querySelector('.segs button[data-tab=missions]'); if(segBtn){ const s=lessonState(l); segBtn.textContent='Missions '+s.cd+'/'+s.ct; } }
 function revealScore(id){ const box=document.querySelector('#m-'+id+' .verdict'); if(!box) return; box.classList.add('reveal'); const s=box.querySelector('.score'); if(!s||reduceMotion()) return; const txt=s.firstChild, target=parseFloat(String(txt.textContent).replace(',','.'))||0; const t0=performance.now(); const st=now=>{ const p=Math.min(1,(now-t0)/800), e=1-Math.pow(1-p,3); txt.textContent=fmt(Math.round(target*e*10)/10); if(p<1) requestAnimationFrame(st); else txt.textContent=fmt(target); }; requestAnimationFrame(st); }
 const reduceMotion=()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 /* ---------- vues ---------- */
@@ -1603,19 +1628,26 @@ function vHome(){
 }
 function vMap(pid){
   setTabs(''); const p=partOf(pid); if(!p) return vHome(); const ls=LESSONS.filter(l=>l.part===pid);
-  return `<section class="banner" style="--pc:${p.col}"><img src="${IMG[p.img]}" alt=""><div class="in"><a class="crumb" href="#home">← Lobby</a><div class="eyebrow" style="color:${p.col}">${esc(p.map)}</div><h1>${esc(p.nom)}</h1><p>${ls.length} leçons · valide les 3 missions principales de chaque leçon (5/10 minimum)</p></div></section>
-  <div class="rounds" style="--pc:${p.col}">${ls.map(l=>{const s=lessonState(l);return `<a class="round" href="#lecon-${l.id}"><div class="num">${String(l.n).padStart(2,'0')}</div><div style="min-width:0"><h3>${esc(l.titre)}</h3><p>${esc(l.pitch)}</p></div><div class="st">${l.pcx&&S.done[l.pcx.id]?`<span class="badge">PC ${fmt(S.done[l.pcx.id].best*2)}/20</span>`:''}${s.cleared?'<span class="badge ok">Validée</span>':s.cd+'/'+s.ct}<div class="pips">${core(l).map(m=>`<i class="${passed(m.id)?'on':''}"></i>`).join('')}${bonus(l).map(m=>`<i class="bonus ${passed(m.id)?'on':''}"></i>`).join('')}</div></div></a>`}).join('')}</div>`;
+  return `<section class="banner" style="--pc:${p.col}"><img src="${IMG[p.img]}" alt=""><div class="in"><a class="crumb" href="#home">← Lobby</a><div class="eyebrow" style="color:${p.col}">${esc(p.map)}</div><h1>${esc(p.nom)}</h1><p>${ls.length} leçons · valide les 5 missions de chaque leçon (5/10 minimum)</p></div></section>
+  <div class="rounds" style="--pc:${p.col}">${ls.map(l=>{const s=lessonState(l);return `<a class="round" href="#lecon-${l.id}"><div class="num">${String(l.n).padStart(2,'0')}</div><div style="min-width:0"><h3>${esc(l.titre)}</h3><p>${esc(l.pitch)}</p></div><div class="st">${l.pcx&&S.done[l.pcx.id]?`<span class="badge">PC ${fmt(S.done[l.pcx.id].best*2)}/20</span>`:''}${s.cleared?'<span class="badge ok">Validée</span>':s.cd+'/'+s.ct}<div class="pips">${core(l).map(m=>`<i class="${passed(m.id)?'on':''}"></i>`).join('')}</div></div></a>`}).join('')}</div>`;
 }
 let lessonTab='cours';
+function curIdx(l){ S.mi=S.mi||{}; const ms=l.ms, firstTodo=ms.findIndex(m=>!S.done[m.id]); let k=S.mi[l.id]; const maxOpen= firstTodo<0? ms.length-1 : firstTodo; if(k==null||k>maxOpen) k=maxOpen; return {k,maxOpen}; }
+function stepperHTML(l){
+  const {k,maxOpen}=curIdx(l), ms=l.ms, m=ms[k], s=lessonState(l);
+  const steps=ms.map((x,i)=>{ const d=S.done[x.id], st= d? (d.best>=5?'ok':'ko') : (i===maxOpen?'todo':'lock'); return `<button class="step ${st} ${i===k?'cur':''}" data-step="${l.id}|${i}" ${i>maxOpen?'disabled':''} aria-label="Mission ${i+1}${d?' : '+fmt(d.best)+'/10':''}"><span>${i+1}</span></button>`; }).join('<i class="stepline"></i>');
+  return `<div class="stepper"><div class="steps">${steps}</div><p class="note">Mission <b>${k+1}</b> sur ${ms.length} · ${s.cleared?'leçon validée':`valide les ${ms.length} missions avec au moins 5/10 pour valider la leçon (+${LESSON_CLEAR_XP} XP)`}</p></div>
+  <div class="missions" id="stepbox">${missionHTML(m, S.done[m.id]?'review':undefined)}</div>`;
+}
 function vLesson(id){
   setTabs(''); const l=lessonOf(id); if(!l) return vHome(); const p=partOf(l.part); S.last=l.id; save(); const s=lessonState(l);
   let body;
   if(lessonTab==='cours') body=`<article class="course">${l.cours}<div class="row" style="margin-top:10px"><button class="btn" data-tab="missions">Passer aux missions</button><span class="note">Lire le cours ne donne pas d'XP : ce sont tes bonnes réponses qui comptent.</span></div></article>`;
-  else if(lessonTab==='missions') body=`<p class="note">Valide ces 3 missions avec au moins 5/10 pour valider la leçon (+${LESSON_CLEAR_XP} XP).</p><div class="missions">${core(l).map(m=>missionHTML(m)).join('')}</div>`;
+  else if(lessonTab==='missions') body=stepperHTML(l);
   else if(lessonTab==='pc') body= l.pcx? `<p class="note">Un vrai sujet type contrôle, avec des documents à lire et à analyser. Prends ton temps : il n'est pas obligatoire pour valider la leçon et rapporte jusqu'à ${l.pcx.xp} XP. Note sur 20.</p><div class="missions">${missionHTML(l.pcx)}</div>` : '<p class="note">Pas de pré-contrôle pour cette leçon.</p>';
-  else body=`<p class="note">Missions facultatives : elles ne comptent pas pour valider la leçon mais rapportent de l'XP.</p><div class="missions">${bonus(l).map(m=>missionHTML(m)).join('')}</div>`;
+  else { lessonTab='missions'; body=stepperHTML(l); }
   return `<section class="banner" style="--pc:${p.col}"><img src="${IMG[p.img]}" alt=""><div class="in"><a class="crumb" href="#map-${p.id}">← ${esc(p.nom)}</a><div class="eyebrow" style="color:${p.col}">Leçon ${l.n}${s.cleared?' · Validée':''}</div><h1>${esc(l.titre)}</h1><p>${esc(l.pitch)}</p></div></section>
-  <div class="segs" style="--pc:${p.col}"><button data-tab="cours" class="${lessonTab==='cours'?'on':''}">Cours</button><button data-tab="missions" class="${lessonTab==='missions'?'on':''}">Missions ${s.cd}/${s.ct}</button><button data-tab="bonus" class="${lessonTab==='bonus'?'on':''}">Bonus ${s.bd}/${s.bt}</button><button data-tab="pc" class="${lessonTab==='pc'?'on':''}"><span class="lg">Pré-</span>contrôle${l.pcx&&S.done[l.pcx.id]?' ✓':''}</button></div>
+  <div class="segs" style="--pc:${p.col}"><button data-tab="cours" class="${lessonTab==='cours'?'on':''}">Cours</button><button data-tab="missions" class="${lessonTab==='missions'?'on':''}">Missions ${s.cd}/${s.ct}</button><button data-tab="pc" class="${lessonTab==='pc'?'on':''}"><span class="lg">Pré-</span>contrôle${l.pcx&&S.done[l.pcx.id]?' ✓':''}</button></div>
   <div id="ltab" style="--pc:${p.col}" class="view">${body}</div>`;
 }
 let arenaF='all';
@@ -1628,7 +1660,7 @@ function vArena(){
   const avg=Object.values(S.done).reduce((a,d)=>a+d.best,0)/total;
   h+=`<section class="stats"><div class="stat"><b>${total}</b><span>Missions jouées</span></div><div class="stat"><b>${fmt(avg)}</b><span>Moyenne /10</span></div><div class="stat"><b>${Object.values(S.done).filter(d=>d.best>=8).length}</b><span>Notes ≥ 8</span></div><div class="stat"><b>${Object.values(S.done).filter(d=>d.best<5).length}</b><span>À retravailler</span></div></section>`;
   h+=`<div class="filters">${[['all','Tout','var(--yel)'],...PARTS.map(p=>[p.id,p.court,p.col])].map(([k,n,c])=>`<button class="chip ${arenaF===k?'on':''}" style="--cc:${c}" data-af="${k}">${esc(n)}</button>`).join('')}</div>`;
-  h+=`<div class="hist">${list.map(m=>{const d=S.done[m.id], l=lessonOf(m.lesson), col=d.best>=8?'var(--good)':d.best>=5?'var(--mid)':'var(--bad)'; return `<div class="hrow" style="--tc:${TAGS[m.t].c}"><span class="ttag">${TAGS[m.t].n}</span><div style="min-width:0"><h3>${m.pc?'Pré-contrôle · ':''}${esc(m.ti)}${m.b?' · Bonus':''}</h3><p>${esc(partOf(l.part).court)} · ${esc(l.titre)} · ${new Date(d.at).toLocaleDateString('fr-FR')}</p></div><span class="hsc" style="color:${col}">${on20(m,d.best)}</span><a class="btn ghost" href="#revoir-${m.id}">Revoir</a></div>`}).join('')||'<p class="note">Aucune mission jouée dans cette matière.</p>'}</div>`;
+  h+=`<div class="hist">${list.map(m=>{const d=S.done[m.id], l=lessonOf(m.lesson), col=d.best>=8?'var(--good)':d.best>=5?'var(--mid)':'var(--bad)'; return `<div class="hrow" style="--tc:${TAGS[m.t].c}"><span class="ttag">${TAGS[m.t].n}</span><div style="min-width:0"><h3>${m.pc?'Pré-contrôle · ':''}${esc(m.ti)}</h3><p>${esc(partOf(l.part).court)} · ${esc(l.titre)} · ${new Date(d.at).toLocaleDateString('fr-FR')}</p></div><span class="hsc" style="color:${col}">${on20(m,d.best)}</span><a class="btn ghost" href="#revoir-${m.id}">Revoir</a></div>`}).join('')||'<p class="note">Aucune mission jouée dans cette matière.</p>'}</div>`;
   return h;
 }
 function vReview(id){
@@ -1640,7 +1672,7 @@ function vRanks(){
   setTabs('rangs'); const cur=rankFor(S.xp).i;
   return `<div class="sechead"><h2>Les rangs</h2><p>${S.xp} XP · ${rankFor(S.xp).next? (rankFor(S.xp).next.x-S.xp)+' XP avant '+rankFor(S.xp).next.n : 'Rang maximum atteint'}</p></div>
   <div class="ranks">${RANKS.map((r,i)=>`<div class="rk ${i===cur?'cur':''} ${i>cur?'lock':''}" style="--rc:${r.c}">${i===cur?'<span class="you">TOI</span>':''}<span class="gem">${emblem(i)}</span><div><h3>${esc(r.n)}</h3><p>${r.x} XP${RANKS[i+1]?' → '+(RANKS[i+1].x-1):' et plus'}</p></div></div>`).join('')}</div>
-  <div class="howxp"><h3 style="font-family:var(--f-disp);font-size:19px">Comment gagner de l'XP</h3><ul><li>Chaque mission rapporte de l'XP proportionnellement à tes bonnes réponses, <b>à la première tentative</b>.</li><li>Valider les 3 missions principales d'une leçon (5/10 minimum) : +${LESSON_CLEAR_XP} XP.</li><li>Les missions bonus rapportent de l'XP sans être obligatoires.</li><li>Chaque pré-contrôle (sujet type contrôle, noté sur 20) rapporte jusqu'à 150 XP.</li><li>Lire un cours ne donne pas d'XP. Rejouer une mission sert à s'entraîner, sans XP.</li></ul><p class="note">XP maximum disponible : ${ALL.concat(PCS).reduce((a,m)=>a+m.xp,0)+16*LESSON_CLEAR_XP} XP.</p></div>
+  <div class="howxp"><h3 style="font-family:var(--f-disp);font-size:19px">Comment gagner de l'XP</h3><ul><li>Chaque mission rapporte de l'XP proportionnellement à tes bonnes réponses, <b>à la première tentative</b>.</li><li>Valider les 5 missions d'une leçon (5/10 minimum à chacune) : +${LESSON_CLEAR_XP} XP.</li><li>Chaque pré-contrôle (sujet type contrôle, noté sur 20) rapporte jusqu'à 150 XP.</li><li>Lire un cours ne donne pas d'XP. Rejouer une mission sert à s'entraîner, sans XP.</li></ul><p class="note">XP maximum disponible : ${ALL.concat(PCS).reduce((a,m)=>a+m.xp,0)+16*LESSON_CLEAR_XP} XP.</p></div>
   <div class="howxp save" id="savebox"><h3 style="font-family:var(--f-disp);font-size:19px">Sauvegarde automatique</h3>
   <p class="autosave"><span class="dotok"></span>Activée · dernière sauvegarde <b id="savedat">${savedAgo()}</b></p>
   <p class="note">Tout est enregistré tout seul sur cet appareil, à chaque réponse : XP, missions, pré-contrôles, brouillons en cours et la page où tu t'es arrêté. Rien à faire, même si tu fermes l'app.</p>
@@ -1717,6 +1749,7 @@ document.addEventListener('change',e=>{ if(e.target.matches('.mission input[type
 document.addEventListener('click',e=>{
   const b=e.target.closest('button'); if(!b) return;
   if(b.dataset.tab){ lessonTab=b.dataset.tab; S.tab=lessonTab; save(); const id=(location.hash.match(/lecon-(\w+)/)||[])[1]||S.last; const v=$('#view'), y=document.getElementById('scroller').scrollTop; v.innerHTML=vLesson(id); document.getElementById('scroller').scrollTop=Math.min(y,v.querySelector('.segs').offsetTop-8); const lt=document.getElementById('ltab'); if(lt&&!reduceMotion()) lt.classList.add('tabin'); hud(); return; }
+  if(b.dataset.step){ const [lid,i]=b.dataset.step.split('|'); S.mi=S.mi||{}; S.mi[lid]=+i; save(); lessonTab='missions'; const v=$('#view'); v.innerHTML=vLesson(lid); const lt=document.getElementById('ltab'); if(lt&&!reduceMotion()) lt.classList.add('tabin'); const sb=document.getElementById('scroller'); sb.scrollTop=Math.max(0,v.querySelector('.segs').offsetTop-8); hud(); return; }
   if(b.dataset.validate){ return validate(b.dataset.validate); }
   if(b.dataset.force){ stopChrono(b.dataset.force); return validate(b.dataset.force,true); }
   if(b.dataset.dismiss){ const w=document.getElementById('warn-'+b.dataset.dismiss); if(w) w.remove(); return; }
