@@ -2018,6 +2018,10 @@ function showInstall(){
 /* ---------- anti-triche : l'XP est recalculée à partir des réponses signées ---------- */
 integrity();
 hud(); route(); bootDone();
+/* ---------- mise à jour automatique : si une nouvelle version est en ligne, on la charge ---------- */
+const APP_VERSION='20261105161511';
+async function checkUpdate(){ try{ const r=await fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'}); if(!r.ok) return; const t=await r.text(); const m=t.match(/APP_VERSION='([^']+)'/); if(m&&m[1]!==APP_VERSION&&m[1]!=='__VERSION__'){ save(); toast('Nouvelle version : mise à jour…'); setTimeout(()=>location.replace(location.pathname+'?v='+m[1]+location.hash),900); } }catch(e){} }
+if(location.protocol.startsWith('http')){ setTimeout(checkUpdate,1500); document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') checkUpdate(); }); }
 })();
 
 </script>
